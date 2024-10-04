@@ -10,7 +10,7 @@ namespace OPC_UA_Client
     public partial class Form1 : Form
     {
         OpcUaClient myClient = new OpcUaClient();
-        
+
         public Form1()
         {
             InitializeComponent();
@@ -32,15 +32,15 @@ namespace OPC_UA_Client
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            
+
             try
             {
                 myClient.ConnectServer(txtServer.Text);
                 if (myClient.Connected)
-                { 
-                    btnConnect.Enabled = false; 
+                {
+                    btnConnect.Enabled = false;
                     btnDisconnect.Enabled = true;
-                    grpRW.Enabled =true;
+                    grpRW.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -85,7 +85,7 @@ namespace OPC_UA_Client
         {
             try
             {
-                myClient.AddSubscription("A", txtItem.Text, SubCallback);
+                myClient.AddSubscription("A", txtItemSub.Text, SubCallback);
             }
             catch (Exception ex)
             {
@@ -97,18 +97,20 @@ namespace OPC_UA_Client
         private void SubCallback(string key, MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
         {
             if (InvokeRequired)
-            { 
-                Invoke(new Action<string,MonitoredItem, MonitoredItemNotificationEventArgs>(SubCallback), key, monitoredItem, e);  
+            {
+                Invoke(new Action<string, MonitoredItem, MonitoredItemNotificationEventArgs>(SubCallback), key, monitoredItem, e);
             }
 
-                if (key == "A") {
-                    MonitoredItemNotification notIf = e.NotificationValue as MonitoredItemNotification;
-                    if (notIf != null)
-                    {
-                        txtValue.Text = notIf.Value.WrappedValue.Value.ToString();
-                    }
+            if (key == "A")
+            {
+                MonitoredItemNotification notIf = e.NotificationValue as MonitoredItemNotification;
+                if (notIf != null)
+                {
+                    txtValueSub.Text = notIf.Value.WrappedValue.Value.ToString();
                 }
+            }
 
         }
+
     }
 }

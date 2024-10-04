@@ -33,6 +33,9 @@
             btnConnect = new Button();
             btnDisconnect = new Button();
             grpRW = new GroupBox();
+            txtValueSub = new TextBox();
+            txtItemSub = new TextBox();
+            btnRead = new Button();
             btnWrite = new Button();
             txtWrite = new TextBox();
             label4 = new Label();
@@ -41,7 +44,6 @@
             txtItem = new TextBox();
             label2 = new Label();
             btnSubscribe = new Button();
-            btnRead = new Button();
             grpRW.SuspendLayout();
             SuspendLayout();
             // 
@@ -64,9 +66,9 @@
             // 
             // btnConnect
             // 
-            btnConnect.Location = new Point(124, 86);
+            btnConnect.Location = new Point(110, 56);
             btnConnect.Name = "btnConnect";
-            btnConnect.Size = new Size(75, 23);
+            btnConnect.Size = new Size(181, 52);
             btnConnect.TabIndex = 2;
             btnConnect.Text = "Connect";
             btnConnect.UseVisualStyleBackColor = true;
@@ -74,9 +76,9 @@
             // 
             // btnDisconnect
             // 
-            btnDisconnect.Location = new Point(233, 86);
+            btnDisconnect.Location = new Point(297, 56);
             btnDisconnect.Name = "btnDisconnect";
-            btnDisconnect.Size = new Size(75, 23);
+            btnDisconnect.Size = new Size(179, 52);
             btnDisconnect.TabIndex = 3;
             btnDisconnect.Text = "Disconnect";
             btnDisconnect.UseVisualStyleBackColor = true;
@@ -84,6 +86,9 @@
             // 
             // grpRW
             // 
+            grpRW.Controls.Add(txtValueSub);
+            grpRW.Controls.Add(txtItemSub);
+            grpRW.Controls.Add(btnRead);
             grpRW.Controls.Add(btnWrite);
             grpRW.Controls.Add(txtWrite);
             grpRW.Controls.Add(label4);
@@ -98,9 +103,34 @@
             grpRW.TabStop = false;
             grpRW.Text = "Read and Write";
             // 
+            // txtValueSub
+            // 
+            txtValueSub.Location = new Point(368, 89);
+            txtValueSub.Name = "txtValueSub";
+            txtValueSub.Size = new Size(159, 23);
+            txtValueSub.TabIndex = 13;
+            // 
+            // txtItemSub
+            // 
+            txtItemSub.Location = new Point(368, 29);
+            txtItemSub.Name = "txtItemSub";
+            txtItemSub.Size = new Size(159, 23);
+            txtItemSub.TabIndex = 12;
+            txtItemSub.Text = "ns=2;s=Tag14";
+            // 
+            // btnRead
+            // 
+            btnRead.Location = new Point(100, 58);
+            btnRead.Name = "btnRead";
+            btnRead.Size = new Size(75, 23);
+            btnRead.TabIndex = 5;
+            btnRead.Text = "Read";
+            btnRead.UseVisualStyleBackColor = true;
+            btnRead.Click += btnRead_Click;
+            // 
             // btnWrite
             // 
-            btnWrite.Location = new Point(100, 203);
+            btnWrite.Location = new Point(100, 189);
             btnWrite.Name = "btnWrite";
             btnWrite.Size = new Size(75, 23);
             btnWrite.TabIndex = 7;
@@ -112,7 +142,7 @@
             // 
             txtWrite.Location = new Point(100, 160);
             txtWrite.Name = "txtWrite";
-            txtWrite.Size = new Size(366, 23);
+            txtWrite.Size = new Size(159, 23);
             txtWrite.TabIndex = 10;
             // 
             // label4
@@ -128,7 +158,7 @@
             // 
             txtValue.Location = new Point(100, 89);
             txtValue.Name = "txtValue";
-            txtValue.Size = new Size(366, 23);
+            txtValue.Size = new Size(159, 23);
             txtValue.TabIndex = 8;
             // 
             // label3
@@ -144,7 +174,7 @@
             // 
             txtItem.Location = new Point(100, 29);
             txtItem.Name = "txtItem";
-            txtItem.Size = new Size(366, 23);
+            txtItem.Size = new Size(159, 23);
             txtItem.TabIndex = 6;
             txtItem.Text = "ns=2;s=Tag11";
             // 
@@ -167,23 +197,12 @@
             btnSubscribe.UseVisualStyleBackColor = true;
             btnSubscribe.Click += btnSubscribe_Click;
             // 
-            // btnRead
-            // 
-            btnRead.Location = new Point(308, 214);
-            btnRead.Name = "btnRead";
-            btnRead.Size = new Size(75, 23);
-            btnRead.TabIndex = 5;
-            btnRead.Text = "Read";
-            btnRead.UseVisualStyleBackColor = true;
-            btnRead.Click += btnRead_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(btnSubscribe);
-            Controls.Add(btnRead);
             Controls.Add(grpRW);
             Controls.Add(btnDisconnect);
             Controls.Add(btnConnect);
@@ -213,5 +232,7 @@
         private Label label2;
         private Button btnSubscribe;
         private Button btnRead;
+        private TextBox txtValueSub;
+        private TextBox txtItemSub;
     }
 }
