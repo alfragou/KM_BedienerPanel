@@ -29,20 +29,20 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            textBox1 = new TextBox();
+            txtServer = new TextBox();
             btnConnect = new Button();
             btnDisconnect = new Button();
-            groupBox1 = new GroupBox();
-            textBox2 = new TextBox();
+            grpRW = new GroupBox();
+            btnWrite = new Button();
+            txtWrite = new TextBox();
+            label4 = new Label();
+            txtValue = new TextBox();
+            label3 = new Label();
+            txtItem = new TextBox();
             label2 = new Label();
             btnSubscribe = new Button();
             btnRead = new Button();
-            textBox3 = new TextBox();
-            label3 = new Label();
-            textBox4 = new TextBox();
-            label4 = new Label();
-            btnWrite = new Button();
-            groupBox1.SuspendLayout();
+            grpRW.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -54,13 +54,13 @@
             label1.TabIndex = 0;
             label1.Text = "OPC UA Server:";
             // 
-            // textBox1
+            // txtServer
             // 
-            textBox1.Location = new Point(110, 27);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(366, 23);
-            textBox1.TabIndex = 1;
-            textBox1.Text = "opc.tcp://km-cad350:62640/IntegrationObjects/ServerSimulator";
+            txtServer.Location = new Point(110, 27);
+            txtServer.Name = "txtServer";
+            txtServer.Size = new Size(366, 23);
+            txtServer.TabIndex = 1;
+            txtServer.Text = "opc.tcp://km-cad350:62640/IntegrationObjects/ServerSimulator";
             // 
             // btnConnect
             // 
@@ -82,29 +82,71 @@
             btnDisconnect.UseVisualStyleBackColor = true;
             btnDisconnect.Click += btnDisconnect_Click;
             // 
-            // groupBox1
+            // grpRW
             // 
-            groupBox1.Controls.Add(btnWrite);
-            groupBox1.Controls.Add(textBox4);
-            groupBox1.Controls.Add(label4);
-            groupBox1.Controls.Add(textBox3);
-            groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(textBox2);
-            groupBox1.Controls.Add(label2);
-            groupBox1.Location = new Point(49, 154);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(558, 284);
-            groupBox1.TabIndex = 4;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Read and Write";
+            grpRW.Controls.Add(btnWrite);
+            grpRW.Controls.Add(txtWrite);
+            grpRW.Controls.Add(label4);
+            grpRW.Controls.Add(txtValue);
+            grpRW.Controls.Add(label3);
+            grpRW.Controls.Add(txtItem);
+            grpRW.Controls.Add(label2);
+            grpRW.Location = new Point(49, 154);
+            grpRW.Name = "grpRW";
+            grpRW.Size = new Size(558, 284);
+            grpRW.TabIndex = 4;
+            grpRW.TabStop = false;
+            grpRW.Text = "Read and Write";
             // 
-            // textBox2
+            // btnWrite
             // 
-            textBox2.Location = new Point(100, 29);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(366, 23);
-            textBox2.TabIndex = 6;
-            textBox2.Text = "ns=2;s=Tag11";
+            btnWrite.Location = new Point(100, 203);
+            btnWrite.Name = "btnWrite";
+            btnWrite.Size = new Size(75, 23);
+            btnWrite.TabIndex = 7;
+            btnWrite.Text = "Write";
+            btnWrite.UseVisualStyleBackColor = true;
+            btnWrite.Click += btnWrite_Click;
+            // 
+            // txtWrite
+            // 
+            txtWrite.Location = new Point(100, 160);
+            txtWrite.Name = "txtWrite";
+            txtWrite.Size = new Size(366, 23);
+            txtWrite.TabIndex = 10;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(6, 163);
+            label4.Name = "label4";
+            label4.Size = new Size(69, 15);
+            label4.TabIndex = 9;
+            label4.Text = "Write Value:";
+            // 
+            // txtValue
+            // 
+            txtValue.Location = new Point(100, 89);
+            txtValue.Name = "txtValue";
+            txtValue.Size = new Size(366, 23);
+            txtValue.TabIndex = 8;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(6, 92);
+            label3.Name = "label3";
+            label3.Size = new Size(38, 15);
+            label3.TabIndex = 7;
+            label3.Text = "Value:";
+            // 
+            // txtItem
+            // 
+            txtItem.Location = new Point(100, 29);
+            txtItem.Name = "txtItem";
+            txtItem.Size = new Size(366, 23);
+            txtItem.TabIndex = 6;
+            txtItem.Text = "ns=2;s=Tag11";
             // 
             // label2
             // 
@@ -135,48 +177,6 @@
             btnRead.UseVisualStyleBackColor = true;
             btnRead.Click += btnRead_Click;
             // 
-            // textBox3
-            // 
-            textBox3.Location = new Point(100, 89);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(366, 23);
-            textBox3.TabIndex = 8;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(6, 92);
-            label3.Name = "label3";
-            label3.Size = new Size(38, 15);
-            label3.TabIndex = 7;
-            label3.Text = "Value:";
-            // 
-            // textBox4
-            // 
-            textBox4.Location = new Point(100, 160);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(366, 23);
-            textBox4.TabIndex = 10;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(6, 163);
-            label4.Name = "label4";
-            label4.Size = new Size(69, 15);
-            label4.TabIndex = 9;
-            label4.Text = "Write Value:";
-            // 
-            // btnWrite
-            // 
-            btnWrite.Location = new Point(100, 203);
-            btnWrite.Name = "btnWrite";
-            btnWrite.Size = new Size(75, 23);
-            btnWrite.TabIndex = 7;
-            btnWrite.Text = "Write";
-            btnWrite.UseVisualStyleBackColor = true;
-            btnWrite.Click += btnWrite_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -184,15 +184,15 @@
             ClientSize = new Size(800, 450);
             Controls.Add(btnSubscribe);
             Controls.Add(btnRead);
-            Controls.Add(groupBox1);
+            Controls.Add(grpRW);
             Controls.Add(btnDisconnect);
             Controls.Add(btnConnect);
-            Controls.Add(textBox1);
+            Controls.Add(txtServer);
             Controls.Add(label1);
             Name = "Form1";
             Text = "Form1";
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            grpRW.ResumeLayout(false);
+            grpRW.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -200,16 +200,16 @@
         #endregion
 
         private Label label1;
-        private TextBox textBox1;
+        private TextBox txtServer;
         private Button btnConnect;
         private Button btnDisconnect;
-        private GroupBox groupBox1;
+        private GroupBox grpRW;
         private Button btnWrite;
-        private TextBox textBox4;
+        private TextBox txtWrite;
         private Label label4;
-        private TextBox textBox3;
+        private TextBox txtValue;
         private Label label3;
-        private TextBox textBox2;
+        private TextBox txtItem;
         private Label label2;
         private Button btnSubscribe;
         private Button btnRead;
