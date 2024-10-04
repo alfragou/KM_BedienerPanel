@@ -85,7 +85,12 @@ namespace OPC_UA_Client
         {
             try
             {
+                // Add a subscription to monitor the item specified in 'txtItemSub.Text'
+                // 'A' is the key, and 'SubCallback' is the method to handle the notifications.
+                // key is useful if you have multiple subscriptions and need to differentiate between them
+                // SubCallback is the method that will be called whenever the subscribed item's value changes.
                 myClient.AddSubscription("A", txtItemSub.Text, SubCallback);
+                
             }
             catch (Exception ex)
             {
@@ -96,14 +101,18 @@ namespace OPC_UA_Client
 
         private void SubCallback(string key, MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
         {
+            // If the method is called from a different thread, invoke it on the UI thread
             if (InvokeRequired)
             {
                 Invoke(new Action<string, MonitoredItem, MonitoredItemNotificationEventArgs>(SubCallback), key, monitoredItem, e);
             }
 
+            // Check if the notification corresponds to the subscription with key 'A'
             if (key == "A")
             {
+                // Try to cast the notification event to MonitoredItemNotification
                 MonitoredItemNotification notIf = e.NotificationValue as MonitoredItemNotification;
+                // If the cast is successful, extract the value from the notification
                 if (notIf != null)
                 {
                     txtValueSub.Text = notIf.Value.WrappedValue.Value.ToString();
