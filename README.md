@@ -1,0 +1,3 @@
+- Simple OPCua client application to read, write and subscripe to a node
+- Uses chinese library OpcUaHelper
+- Source https://www.youtube.com/watch?v=A1xNi4quuk4
