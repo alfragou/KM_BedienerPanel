@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             label1 = new Label();
             txtServer = new TextBox();
             btnConnect = new Button();
@@ -44,13 +45,29 @@
             txtItem = new TextBox();
             label2 = new Label();
             btnSubscribe = new Button();
+            groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            label46 = new Label();
+            Maschine = new Label();
+            cmbAvailableMachinesGeneral = new ComboBox();
+            label41 = new Label();
+            cmbSelectedDatabankGeneral = new ComboBox();
+            btnSaveSQLChanges = new Button();
+            txtSystemTime = new TextBox();
+            btnDeleteSQLEntry = new Button();
+            btnReadAllSQLEntries = new Button();
+            dataGridView1 = new DataGridView();
+            timer1 = new System.Windows.Forms.Timer(components);
             grpRW.SuspendLayout();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(16, 30);
+            label1.Location = new Point(6, 19);
             label1.Name = "label1";
             label1.Size = new Size(88, 15);
             label1.TabIndex = 0;
@@ -58,7 +75,7 @@
             // 
             // txtServer
             // 
-            txtServer.Location = new Point(110, 27);
+            txtServer.Location = new Point(100, 16);
             txtServer.Name = "txtServer";
             txtServer.Size = new Size(366, 23);
             txtServer.TabIndex = 1;
@@ -66,9 +83,9 @@
             // 
             // btnConnect
             // 
-            btnConnect.Location = new Point(110, 56);
+            btnConnect.Location = new Point(472, 16);
             btnConnect.Name = "btnConnect";
-            btnConnect.Size = new Size(181, 52);
+            btnConnect.Size = new Size(94, 23);
             btnConnect.TabIndex = 2;
             btnConnect.Text = "Connect";
             btnConnect.UseVisualStyleBackColor = true;
@@ -76,9 +93,9 @@
             // 
             // btnDisconnect
             // 
-            btnDisconnect.Location = new Point(297, 56);
+            btnDisconnect.Location = new Point(572, 16);
             btnDisconnect.Name = "btnDisconnect";
-            btnDisconnect.Size = new Size(179, 52);
+            btnDisconnect.Size = new Size(96, 23);
             btnDisconnect.TabIndex = 3;
             btnDisconnect.Text = "Disconnect";
             btnDisconnect.UseVisualStyleBackColor = true;
@@ -87,6 +104,7 @@
             // grpRW
             // 
             grpRW.Controls.Add(txtValueSub);
+            grpRW.Controls.Add(btnSubscribe);
             grpRW.Controls.Add(txtItemSub);
             grpRW.Controls.Add(btnRead);
             grpRW.Controls.Add(btnWrite);
@@ -96,23 +114,23 @@
             grpRW.Controls.Add(label3);
             grpRW.Controls.Add(txtItem);
             grpRW.Controls.Add(label2);
-            grpRW.Location = new Point(49, 154);
+            grpRW.Location = new Point(12, 74);
             grpRW.Name = "grpRW";
-            grpRW.Size = new Size(558, 284);
+            grpRW.Size = new Size(708, 103);
             grpRW.TabIndex = 4;
             grpRW.TabStop = false;
             grpRW.Text = "Read and Write";
             // 
             // txtValueSub
             // 
-            txtValueSub.Location = new Point(368, 89);
+            txtValueSub.Location = new Point(368, 42);
             txtValueSub.Name = "txtValueSub";
             txtValueSub.Size = new Size(159, 23);
             txtValueSub.TabIndex = 13;
             // 
             // txtItemSub
             // 
-            txtItemSub.Location = new Point(368, 29);
+            txtItemSub.Location = new Point(368, 13);
             txtItemSub.Name = "txtItemSub";
             txtItemSub.Size = new Size(159, 23);
             txtItemSub.TabIndex = 12;
@@ -120,7 +138,7 @@
             // 
             // btnRead
             // 
-            btnRead.Location = new Point(100, 58);
+            btnRead.Location = new Point(265, 13);
             btnRead.Name = "btnRead";
             btnRead.Size = new Size(75, 23);
             btnRead.TabIndex = 5;
@@ -130,7 +148,7 @@
             // 
             // btnWrite
             // 
-            btnWrite.Location = new Point(100, 189);
+            btnWrite.Location = new Point(265, 70);
             btnWrite.Name = "btnWrite";
             btnWrite.Size = new Size(75, 23);
             btnWrite.TabIndex = 7;
@@ -140,7 +158,7 @@
             // 
             // txtWrite
             // 
-            txtWrite.Location = new Point(100, 160);
+            txtWrite.Location = new Point(100, 70);
             txtWrite.Name = "txtWrite";
             txtWrite.Size = new Size(159, 23);
             txtWrite.TabIndex = 10;
@@ -148,7 +166,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(6, 163);
+            label4.Location = new Point(6, 73);
             label4.Name = "label4";
             label4.Size = new Size(69, 15);
             label4.TabIndex = 9;
@@ -156,7 +174,7 @@
             // 
             // txtValue
             // 
-            txtValue.Location = new Point(100, 89);
+            txtValue.Location = new Point(100, 42);
             txtValue.Name = "txtValue";
             txtValue.Size = new Size(159, 23);
             txtValue.TabIndex = 8;
@@ -164,7 +182,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(6, 92);
+            label3.Location = new Point(6, 45);
             label3.Name = "label3";
             label3.Size = new Size(38, 15);
             label3.TabIndex = 7;
@@ -172,7 +190,7 @@
             // 
             // txtItem
             // 
-            txtItem.Location = new Point(100, 29);
+            txtItem.Location = new Point(100, 13);
             txtItem.Name = "txtItem";
             txtItem.Size = new Size(159, 23);
             txtItem.TabIndex = 6;
@@ -181,7 +199,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(6, 32);
+            label2.Location = new Point(6, 16);
             label2.Name = "label2";
             label2.Size = new Size(61, 15);
             label2.TabIndex = 5;
@@ -189,7 +207,7 @@
             // 
             // btnSubscribe
             // 
-            btnSubscribe.Location = new Point(417, 214);
+            btnSubscribe.Location = new Point(533, 13);
             btnSubscribe.Name = "btnSubscribe";
             btnSubscribe.Size = new Size(75, 23);
             btnSubscribe.TabIndex = 6;
@@ -197,23 +215,152 @@
             btnSubscribe.UseVisualStyleBackColor = true;
             btnSubscribe.Click += btnSubscribe_Click;
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(txtServer);
+            groupBox1.Controls.Add(btnConnect);
+            groupBox1.Controls.Add(btnDisconnect);
+            groupBox1.Location = new Point(12, 12);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(708, 56);
+            groupBox1.TabIndex = 7;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Verbindung";
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(dataGridView1);
+            groupBox2.Controls.Add(Maschine);
+            groupBox2.Controls.Add(cmbAvailableMachinesGeneral);
+            groupBox2.Controls.Add(label41);
+            groupBox2.Controls.Add(cmbSelectedDatabankGeneral);
+            groupBox2.Controls.Add(btnSaveSQLChanges);
+            groupBox2.Controls.Add(txtSystemTime);
+            groupBox2.Controls.Add(btnDeleteSQLEntry);
+            groupBox2.Controls.Add(btnReadAllSQLEntries);
+            groupBox2.Controls.Add(label46);
+            groupBox2.Location = new Point(12, 183);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(991, 385);
+            groupBox2.TabIndex = 8;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "groupBox2";
+            // 
+            // label46
+            // 
+            label46.AutoSize = true;
+            label46.Location = new Point(7, 19);
+            label46.Margin = new Padding(4, 0, 4, 0);
+            label46.Name = "label46";
+            label46.Size = new Size(71, 15);
+            label46.TabIndex = 45;
+            label46.Text = "SystemTime";
+            // 
+            // Maschine
+            // 
+            Maschine.AutoSize = true;
+            Maschine.Location = new Point(442, 21);
+            Maschine.Margin = new Padding(4, 0, 4, 0);
+            Maschine.Name = "Maschine";
+            Maschine.Size = new Size(58, 15);
+            Maschine.TabIndex = 53;
+            Maschine.Text = "Maschine";
+            // 
+            // cmbAvailableMachinesGeneral
+            // 
+            cmbAvailableMachinesGeneral.FormattingEnabled = true;
+            cmbAvailableMachinesGeneral.Location = new Point(511, 17);
+            cmbAvailableMachinesGeneral.Margin = new Padding(4, 3, 4, 3);
+            cmbAvailableMachinesGeneral.Name = "cmbAvailableMachinesGeneral";
+            cmbAvailableMachinesGeneral.Size = new Size(132, 23);
+            cmbAvailableMachinesGeneral.TabIndex = 52;
+            // 
+            // label41
+            // 
+            label41.AutoSize = true;
+            label41.Location = new Point(212, 20);
+            label41.Margin = new Padding(4, 0, 4, 0);
+            label41.Name = "label41";
+            label41.Size = new Size(64, 15);
+            label41.TabIndex = 51;
+            label41.Text = "Datenbank";
+            // 
+            // cmbSelectedDatabankGeneral
+            // 
+            cmbSelectedDatabankGeneral.FormattingEnabled = true;
+            cmbSelectedDatabankGeneral.Location = new Point(289, 16);
+            cmbSelectedDatabankGeneral.Margin = new Padding(4, 3, 4, 3);
+            cmbSelectedDatabankGeneral.Name = "cmbSelectedDatabankGeneral";
+            cmbSelectedDatabankGeneral.Size = new Size(140, 23);
+            cmbSelectedDatabankGeneral.TabIndex = 50;
+            // 
+            // btnSaveSQLChanges
+            // 
+            btnSaveSQLChanges.Location = new Point(875, 15);
+            btnSaveSQLChanges.Margin = new Padding(4, 3, 4, 3);
+            btnSaveSQLChanges.Name = "btnSaveSQLChanges";
+            btnSaveSQLChanges.Size = new Size(105, 27);
+            btnSaveSQLChanges.TabIndex = 49;
+            btnSaveSQLChanges.Text = "Save Changes";
+            btnSaveSQLChanges.UseVisualStyleBackColor = true;
+            // 
+            // txtSystemTime
+            // 
+            txtSystemTime.Location = new Point(78, 15);
+            txtSystemTime.Margin = new Padding(4, 3, 4, 3);
+            txtSystemTime.Name = "txtSystemTime";
+            txtSystemTime.ReadOnly = true;
+            txtSystemTime.Size = new Size(122, 23);
+            txtSystemTime.TabIndex = 48;
+            // 
+            // btnDeleteSQLEntry
+            // 
+            btnDeleteSQLEntry.Location = new Point(763, 15);
+            btnDeleteSQLEntry.Margin = new Padding(4, 3, 4, 3);
+            btnDeleteSQLEntry.Name = "btnDeleteSQLEntry";
+            btnDeleteSQLEntry.Size = new Size(105, 27);
+            btnDeleteSQLEntry.TabIndex = 47;
+            btnDeleteSQLEntry.Text = "Delete Entry";
+            btnDeleteSQLEntry.UseVisualStyleBackColor = true;
+            // 
+            // btnReadAllSQLEntries
+            // 
+            btnReadAllSQLEntries.Location = new Point(651, 15);
+            btnReadAllSQLEntries.Margin = new Padding(4, 3, 4, 3);
+            btnReadAllSQLEntries.Name = "btnReadAllSQLEntries";
+            btnReadAllSQLEntries.Size = new Size(105, 27);
+            btnReadAllSQLEntries.TabIndex = 46;
+            btnReadAllSQLEntries.Text = "Read All Entries";
+            btnReadAllSQLEntries.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(1, 46);
+            dataGridView1.Margin = new Padding(4, 3, 4, 3);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(983, 333);
+            dataGridView1.TabIndex = 54;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(btnSubscribe);
+            ClientSize = new Size(1062, 580);
+            Controls.Add(groupBox2);
+            Controls.Add(groupBox1);
             Controls.Add(grpRW);
-            Controls.Add(btnDisconnect);
-            Controls.Add(btnConnect);
-            Controls.Add(txtServer);
-            Controls.Add(label1);
             Name = "Form1";
             Text = "Form1";
             grpRW.ResumeLayout(false);
             grpRW.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -234,5 +381,18 @@
         private Button btnRead;
         private TextBox txtValueSub;
         private TextBox txtItemSub;
+        private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private DataGridView dataGridView1;
+        private Label Maschine;
+        private ComboBox cmbAvailableMachinesGeneral;
+        private Label label41;
+        private ComboBox cmbSelectedDatabankGeneral;
+        private Button btnSaveSQLChanges;
+        private TextBox txtSystemTime;
+        private Button btnDeleteSQLEntry;
+        private Button btnReadAllSQLEntries;
+        private Label label46;
+        private System.Windows.Forms.Timer timer1;
     }
 }

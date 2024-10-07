@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Configuration>
+	<connectionString>
+		<DataSource1>KM-CAD350\SQLEXPRESS</DataSource1>
+		<DataSource>demuc-sseptool2\SQLEXPRESS</DataSource>
+		<Port>1433</Port>
+		<InitialCatalog>tpmdatabase</InitialCatalog>
+		<UserID>tpmuser</UserID>
+		<Password>natur_2121!D</Password>
+	</connectionString>
+	<Machines>
+		<CMachine>
+			<connected>true</connected>
+			<Name>4808-001</Name>
+			<OPCServer>uagate</OPCServer>
+			<Address>opc.tcp://uagate-4808-01:4840</Address>
+			<Outputintervall>3000</Outputintervall>
+			<Comment></Comment>
+		</CMachine>
+		<CMachine>
+			<connected>true</connected>
+			<Name>4803-001</Name>
+			<OPCServer>uagate</OPCServer>
+			<Address>opc.tcp://uagate-4803-01:4840</Address>
+			<Outputintervall>3000</Outputintervall>
+			<Comment></Comment>
+		</CMachine>
+		<CMachine>
+			<connected>true</connected>
+			<Name>4809-001</Name>
+			<OPCServer>uagate</OPCServer>
+			<Address>opc.tcp://uagate-4809-01:4840</Address>
+			<Outputintervall>3000</Outputintervall>
+			<Comment></Comment>
+		</CMachine>
+			<CMachine>
+			<connected>true</connected>
+			<Name>4807-001</Name>
+			<OPCServer>uagate</OPCServer>
+			<Address>opc.tcp://uagate-4807-01:4840</Address>
+			<Outputintervall>3000</Outputintervall>
+			<Comment></Comment>
+		</CMachine>
+	</Machines>
+</Configuration>

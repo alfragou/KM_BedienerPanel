@@ -4,6 +4,7 @@
 using Opc.Ua;
 using Opc.Ua.Client;
 using OpcUaHelper;
+using System.Timers; // For timer functionality
 
 namespace OPC_UA_Client
 {
@@ -26,7 +27,7 @@ namespace OPC_UA_Client
             string computerName = Environment.MachineName;
             if (computerName == "CMP06507") txtServer.Text = "opc.tcp://cmp06507:62640/IntegrationObjects/ServerSimulator";
             else if (computerName == "KM-CAD350") txtServer.Text = "opc.tcp://km-cad350:62640/IntegrationObjects/ServerSimulator";
-
+            else if (computerName == "CMP07326") txtServer.Text = "opc.tcp://uagate-4809-01:4840"; // 4809 - uagate
         }
 
 
