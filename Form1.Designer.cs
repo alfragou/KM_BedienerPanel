@@ -35,6 +35,7 @@
             btnDisconnect = new Button();
             grpRW = new GroupBox();
             txtValueSub = new TextBox();
+            btnSubscribe = new Button();
             txtItemSub = new TextBox();
             btnRead = new Button();
             btnWrite = new Button();
@@ -44,20 +45,21 @@
             label3 = new Label();
             txtItem = new TextBox();
             label2 = new Label();
-            btnSubscribe = new Button();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
-            label46 = new Label();
-            Maschine = new Label();
-            cmbAvailableMachinesGeneral = new ComboBox();
+            dataGridView1 = new DataGridView();
             label41 = new Label();
             cmbSelectedDatabankGeneral = new ComboBox();
             btnSaveSQLChanges = new Button();
             txtSystemTime = new TextBox();
             btnDeleteSQLEntry = new Button();
             btnReadAllSQLEntries = new Button();
-            dataGridView1 = new DataGridView();
+            label46 = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
+            label5 = new Label();
+            lblComputerName = new Label();
+            lblMachineNo = new Label();
+            label8 = new Label();
             grpRW.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -127,6 +129,16 @@
             txtValueSub.Name = "txtValueSub";
             txtValueSub.Size = new Size(159, 23);
             txtValueSub.TabIndex = 13;
+            // 
+            // btnSubscribe
+            // 
+            btnSubscribe.Location = new Point(533, 13);
+            btnSubscribe.Name = "btnSubscribe";
+            btnSubscribe.Size = new Size(75, 23);
+            btnSubscribe.TabIndex = 6;
+            btnSubscribe.Text = "Subscribe";
+            btnSubscribe.UseVisualStyleBackColor = true;
+            btnSubscribe.Click += btnSubscribe_Click;
             // 
             // txtItemSub
             // 
@@ -205,16 +217,6 @@
             label2.TabIndex = 5;
             label2.Text = "OPC Item:";
             // 
-            // btnSubscribe
-            // 
-            btnSubscribe.Location = new Point(533, 13);
-            btnSubscribe.Name = "btnSubscribe";
-            btnSubscribe.Size = new Size(75, 23);
-            btnSubscribe.TabIndex = 6;
-            btnSubscribe.Text = "Subscribe";
-            btnSubscribe.UseVisualStyleBackColor = true;
-            btnSubscribe.Click += btnSubscribe_Click;
-            // 
             // groupBox1
             // 
             groupBox1.Controls.Add(label1);
@@ -231,8 +233,6 @@
             // groupBox2
             // 
             groupBox2.Controls.Add(dataGridView1);
-            groupBox2.Controls.Add(Maschine);
-            groupBox2.Controls.Add(cmbAvailableMachinesGeneral);
             groupBox2.Controls.Add(label41);
             groupBox2.Controls.Add(cmbSelectedDatabankGeneral);
             groupBox2.Controls.Add(btnSaveSQLChanges);
@@ -247,34 +247,14 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "groupBox2";
             // 
-            // label46
+            // dataGridView1
             // 
-            label46.AutoSize = true;
-            label46.Location = new Point(7, 19);
-            label46.Margin = new Padding(4, 0, 4, 0);
-            label46.Name = "label46";
-            label46.Size = new Size(71, 15);
-            label46.TabIndex = 45;
-            label46.Text = "SystemTime";
-            // 
-            // Maschine
-            // 
-            Maschine.AutoSize = true;
-            Maschine.Location = new Point(442, 21);
-            Maschine.Margin = new Padding(4, 0, 4, 0);
-            Maschine.Name = "Maschine";
-            Maschine.Size = new Size(58, 15);
-            Maschine.TabIndex = 53;
-            Maschine.Text = "Maschine";
-            // 
-            // cmbAvailableMachinesGeneral
-            // 
-            cmbAvailableMachinesGeneral.FormattingEnabled = true;
-            cmbAvailableMachinesGeneral.Location = new Point(511, 17);
-            cmbAvailableMachinesGeneral.Margin = new Padding(4, 3, 4, 3);
-            cmbAvailableMachinesGeneral.Name = "cmbAvailableMachinesGeneral";
-            cmbAvailableMachinesGeneral.Size = new Size(132, 23);
-            cmbAvailableMachinesGeneral.TabIndex = 52;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(1, 46);
+            dataGridView1.Margin = new Padding(4, 3, 4, 3);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(983, 333);
+            dataGridView1.TabIndex = 54;
             // 
             // label41
             // 
@@ -304,6 +284,7 @@
             btnSaveSQLChanges.TabIndex = 49;
             btnSaveSQLChanges.Text = "Save Changes";
             btnSaveSQLChanges.UseVisualStyleBackColor = true;
+            btnSaveSQLChanges.Click += btnSaveSQLChanges_Click;
             // 
             // txtSystemTime
             // 
@@ -323,6 +304,7 @@
             btnDeleteSQLEntry.TabIndex = 47;
             btnDeleteSQLEntry.Text = "Delete Entry";
             btnDeleteSQLEntry.UseVisualStyleBackColor = true;
+            btnDeleteSQLEntry.Click += btnDeleteSQLEntry_Click;
             // 
             // btnReadAllSQLEntries
             // 
@@ -333,21 +315,67 @@
             btnReadAllSQLEntries.TabIndex = 46;
             btnReadAllSQLEntries.Text = "Read All Entries";
             btnReadAllSQLEntries.UseVisualStyleBackColor = true;
+            btnReadAllSQLEntries.Click += btnReadAllSQLEntries_Click;
             // 
-            // dataGridView1
+            // label46
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(1, 46);
-            dataGridView1.Margin = new Padding(4, 3, 4, 3);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(983, 333);
-            dataGridView1.TabIndex = 54;
+            label46.AutoSize = true;
+            label46.Location = new Point(7, 19);
+            label46.Margin = new Padding(4, 0, 4, 0);
+            label46.Name = "label46";
+            label46.Size = new Size(71, 15);
+            label46.TabIndex = 45;
+            label46.Text = "SystemTime";
+            // 
+            // timer1
+            // 
+            timer1.Tick += timer1_Tick;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(817, 15);
+            label5.Name = "label5";
+            label5.Size = new Size(64, 15);
+            label5.TabIndex = 9;
+            label5.Text = "Computer:";
+            // 
+            // lblComputerName
+            // 
+            lblComputerName.AutoSize = true;
+            lblComputerName.Location = new Point(887, 15);
+            lblComputerName.Name = "lblComputerName";
+            lblComputerName.Size = new Size(109, 15);
+            lblComputerName.TabIndex = 11;
+            lblComputerName.Text = "<ComputerName>";
+            // 
+            // lblMachineNo
+            // 
+            lblMachineNo.AutoSize = true;
+            lblMachineNo.Location = new Point(887, 36);
+            lblMachineNo.Name = "lblMachineNo";
+            lblMachineNo.Size = new Size(101, 15);
+            lblMachineNo.TabIndex = 13;
+            lblMachineNo.Text = "<MachineName>";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(817, 36);
+            label8.Name = "label8";
+            label8.Size = new Size(61, 15);
+            label8.TabIndex = 12;
+            label8.Text = "Maschine:";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1062, 580);
+            Controls.Add(lblMachineNo);
+            Controls.Add(label8);
+            Controls.Add(lblComputerName);
+            Controls.Add(label5);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(grpRW);
@@ -361,6 +389,7 @@
             groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -384,8 +413,6 @@
         private GroupBox groupBox1;
         private GroupBox groupBox2;
         private DataGridView dataGridView1;
-        private Label Maschine;
-        private ComboBox cmbAvailableMachinesGeneral;
         private Label label41;
         private ComboBox cmbSelectedDatabankGeneral;
         private Button btnSaveSQLChanges;
@@ -394,5 +421,9 @@
         private Button btnReadAllSQLEntries;
         private Label label46;
         private System.Windows.Forms.Timer timer1;
+        private Label label5;
+        private Label lblComputerName;
+        private Label lblMachineNo;
+        private Label label8;
     }
 }
