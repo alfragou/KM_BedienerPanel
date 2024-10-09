@@ -7,6 +7,8 @@ using OpcUaHelper;
 using System.Data;
 using System.Timers; // For timer functionality
 using System.Data.SqlClient;
+using System.Threading.Tasks;
+using static Org.BouncyCastle.Math.Primes;
 
 namespace OPC_UA_Client
 {
@@ -17,6 +19,11 @@ namespace OPC_UA_Client
         OpcUaClient myClient = new OpcUaClient();
         private string SQL_Queries_filePath;
         private string xmlFilePath;
+
+        private System.Timers.Timer opcTimerMStatus;  // Timer for periodic OPC UA reading with Explicit reference to System.Timers.Timer 
+        private int cycleTime = 3000;  // Stores the cycle time
+
+
 
         private MyXmlReader xmlReader;
         string connectionString; // now build from XML
@@ -30,6 +37,11 @@ namespace OPC_UA_Client
             this.Load += Form1_Load; // Hook up the Load event
             myClient.UserIdentity = new UserIdentity(new AnonymousIdentityToken());
 
+            txtCycleTimeMStatus.Text = cycleTime.ToString();
+
+            // Initialize the Timer, but do not start it yet
+            opcTimerMStatus = new System.Timers.Timer();
+            opcTimerMStatus.Elapsed += OpcTimerMStatus_Elapsed;
 
             // ComboBox Databanks - First entry appears first at the dropdown list
             string[] availableDatabanks = { "ProductionData", "MachineStatus" };
@@ -45,6 +57,7 @@ namespace OPC_UA_Client
         {
             btnDisconnect.Enabled = false;
             grpRW.Enabled = false;
+            grpMachineStatus.Enabled = false;   
 
             timer1.Start(); // UI clock timer for system time
 
@@ -103,6 +116,7 @@ namespace OPC_UA_Client
                     btnConnect.Enabled = false;
                     btnDisconnect.Enabled = true;
                     grpRW.Enabled = true;
+                    grpMachineStatus.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -118,6 +132,7 @@ namespace OPC_UA_Client
             btnConnect.Enabled = true;
             btnDisconnect.Enabled = false;
             grpRW.Enabled = false;
+            grpMachineStatus.Enabled = false;
         }
 
         private void btnRead_Click(object sender, EventArgs e)
@@ -143,7 +158,17 @@ namespace OPC_UA_Client
             myClient.WriteNode(txtItem.Text, Convert.ToInt16(txtWrite.Text));
         }
 
+
+        // The button click event that triggers the subscription
         private void btnSubscribe_Click(object sender, EventArgs e)
+        {
+            // Pass the specific TextBox controls for input and output
+            SubscribeAsync(txtItemSub.Text, txtValueSub); // For one pair
+            //Subscribe(txtItemSub2, txtValueSub2); // For another pair
+        }
+
+        // Asynchronous method for subscribing to a monitored item
+        private async Task SubscribeAsync(string nodeId, TextBox txtOutput)
         {
             try
             {
@@ -151,7 +176,19 @@ namespace OPC_UA_Client
                 // 'A' is the key, and 'SubCallback' is the method to handle the notifications.
                 // key is useful if you have multiple subscriptions and need to differentiate between them
                 // SubCallback is the method that will be called whenever the subscribed item's value changes.
-                myClient.AddSubscription("A", txtItemSub.Text, SubCallback);
+                // myClient.AddSubscription("A", txtItemSub.Text, SubCallback); // working but with fixed textboxes
+
+                // Add a subscription with a unique key for each TextBox combination
+                string subscriptionKey = Guid.NewGuid().ToString(); // Unique key per subscription
+                                                                    // Add the subscription asynchronously using awaitable methods
+                
+
+
+                await Task.Run(() =>
+                    myClient.AddSubscription(subscriptionKey, nodeId,
+                    (key, monitoredItem, ev) => SubCallback(key, monitoredItem, ev, txtOutput)));
+
+                
 
             }
             catch (Exception ex)
@@ -161,23 +198,43 @@ namespace OPC_UA_Client
             }
         }
 
-        private void SubCallback(string key, MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
+
+
+       
+
+        private void OnSubscriptionCompleted()
         {
-            // If the method is called from a different thread, invoke it on the UI thread
+            // This method is called when the subscription task finishes
+            // Update the UI or log the completion
+            txtUpdatedOnProgStatus.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
+        // The callback to process the subscription updates asynchronously
+        private async void SubCallback(string key, MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e, TextBox txtOutput)
+        {
+            // Ensure thread-safe access to the UI thread
             if (InvokeRequired)
             {
-                Invoke(new Action<string, MonitoredItem, MonitoredItemNotificationEventArgs>(SubCallback), key, monitoredItem, e);
+                // Use Task.Run to wrap the synchronous Invoke call and make it async-friendly
+                Invoke(new Action<string, MonitoredItem, MonitoredItemNotificationEventArgs, TextBox>(SubCallback), key, monitoredItem, e, txtOutput);
             }
 
-            // Check if the notification corresponds to the subscription with key 'A'
-            if (key == "A")
+            else
             {
-                // Try to cast the notification event to MonitoredItemNotification
+                // Process the notification
                 MonitoredItemNotification notIf = e.NotificationValue as MonitoredItemNotification;
-                // If the cast is successful, extract the value from the notification
+                // Check if the notification is valid and if there is a change
                 if (notIf != null)
                 {
-                    txtValueSub.Text = notIf.Value.WrappedValue.Value.ToString();
+                    // Update txtOutput with the new value
+                    txtOutput.Text = notIf.Value.WrappedValue.Value.ToString();
+
+                    // Update txtSameSince with the current system time
+                    txtSameSinceProgStatus.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                }
+                else {
+                    // If the signal has not changed, update txtUpdatedOn with the current system time
+                    txtUpdatedOnProgStatus.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 }
             }
 
@@ -187,7 +244,28 @@ namespace OPC_UA_Client
         private void timer1_Tick(object sender, EventArgs e)
         {
             // Update the TextBox with the current time
-            txtSystemTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string timeNow = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            txtSystemTime.Text = timeNow;
+            txtUpdatedOnProgStatus.Text = timeNow;
+
+            // CalculateDelta
+            if (txtSameSinceProgStatus.Text != "") txtDeltaTimeProgStatus.Text = CalculateTimeDifference(txtSameSinceProgStatus.Text, timeNow);
+            if (txtSameSincePoti.Text != "") txtDeltaTimePoti.Text = CalculateTimeDifference(txtSameSincePoti.Text, timeNow);
+        }
+
+
+
+        public static string CalculateTimeDifference(string startTime, string endTime)
+        {
+            // Parse the time strings into DateTime objects
+            DateTime start = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss", null);
+            DateTime end = DateTime.ParseExact(endTime, "yyyy-MM-dd HH:mm:ss", null);
+
+            // Calculate the time difference as a TimeSpan
+            TimeSpan difference = end - start;
+
+            // Format the time difference as a string in HH:MM:SS format
+            return difference.ToString(@"hh\:mm\:ss");
         }
 
         #region SQL_Manual_Entries
@@ -317,6 +395,13 @@ namespace OPC_UA_Client
             // Databank selection
             string selectedDatabankFilter = getDatabankGeneralSelection();
             if (selectedDatabankFilter == null) return;
+
+            if (dataTable == null || dataTable.Rows.Count == 0)
+            {
+                MessageBox.Show("No data to save.");
+                return;
+            }
+
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -483,5 +568,97 @@ namespace OPC_UA_Client
                 MessageBox.Show("Please select a row to delete.");
             }
         }
+
+        private async void btnWriteMStatus_Start_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (int.TryParse(txtCycleTimeMStatus.Text, out cycleTime) && cycleTime > 0)
+                {
+                    //updateChangeSinceTextBox(); // Update TextBox with systemTime
+                    //opcTimerMStatus.Interval = cycleTime;  // Set the interval based on cycle time input
+                    //opcTimerMStatus.Start();  // Start the timer to repeatedly fetch OPC data
+                    btnWriteMStatus_Start.Enabled = false;  // Disable the Start button while running
+                    btnWriteMStatus_Stop.Enabled = true;  // Enable Stop button
+
+                    string nodeID_progStatus = "ns=2;s=Tag11";
+                    string nodeID_poti = "ns=2;s=Tag12";
+
+                    await SubscribeAsync(txtItemSub.Text, txtValueSub);
+                    await SubscribeAsync(nodeID_progStatus, txtValueProgStatus); // For one pair
+                    await SubscribeAsync(nodeID_poti, txtValuePoti); // For one pair
+
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a valid cycle time (milliseconds).");
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+        }
+
+        private void updateChangeSinceTextBox()
+        {
+            // Action for all textboxes that start with txtSameSince within groupBox3
+            foreach (Control control in grpMachineStatus.Controls)
+            {
+                if (control is TextBox textBox && control.Name.StartsWith("txtSameSince"))
+                {
+                    textBox.Text = txtSystemTime.Text;
+                }
+            }
+        }
+
+        private async void OpcTimerMStatus_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //await ReadOpcDataFromMultipleEndpointsAsync();
+        }
+
+        // Async method to read OPC data from multiple endpoints and update TextBoxes
+        private async Task ReadOpcDataFromMultipleEndpointsAsync()
+        {
+            try
+            {
+                SubscribeAsync(txtItemProgStatus.Text, txtValueProgStatus); // For one pair
+                SubscribeAsync(txtItemPoti.Text, txtValuePoti); // For one pair
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        private void btnWriteMStatus_Stop_Click(object sender, EventArgs e)
+        {
+            opcTimerMStatus.Stop();  // Stop the timer
+            btnWriteMStatus_Start.Enabled = true;  // Enable Start button
+            btnWriteMStatus_Stop.Enabled = false;  // Disable Stop button
+
+            // Clear fields
+            DialogResult result = MessageBox.Show("Do you want to clear the fields?", "Clear Fields", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                // Action for all textboxes with groupBox3
+                foreach (Control control in grpMachineStatus.Controls)
+                {
+                    if (control is TextBox textBox)
+                    {
+                        textBox.Clear();
+                        textBox.BackColor = Color.White;
+                    }
+                }
+            }
+        }
+
+
     }
+
+
 }
