@@ -61,6 +61,13 @@
             lblMachineNo = new Label();
             label8 = new Label();
             grpMachineStatus = new GroupBox();
+            grpTimeParameters = new GroupBox();
+            txtIgnoneBreaksTime = new TextBox();
+            label32 = new Label();
+            txtCycleTimeMStatus = new TextBox();
+            label33 = new Label();
+            label45 = new Label();
+            label42 = new Label();
             lblProgStatus = new Label();
             txtDeltaTimePoti = new TextBox();
             txtUpdatedOnPoti = new TextBox();
@@ -70,14 +77,8 @@
             txtItemPoti = new TextBox();
             label6 = new Label();
             txtItemProgStatus = new TextBox();
-            label42 = new Label();
-            txtIgnoneBreaksTime = new TextBox();
-            label45 = new Label();
             chkMachineStatus_ReadSQLAfterChanges = new CheckBox();
             chkMachineStatus_Add2SQL = new CheckBox();
-            label33 = new Label();
-            txtCycleTimeMStatus = new TextBox();
-            label32 = new Label();
             btnWriteMStatus_Stop = new Button();
             btnWriteMStatus_Start = new Button();
             label39 = new Label();
@@ -116,6 +117,7 @@
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             grpMachineStatus.SuspendLayout();
+            grpTimeParameters.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -292,9 +294,9 @@
             groupBox2.Controls.Add(btnDeleteSQLEntry);
             groupBox2.Controls.Add(btnReadAllSQLEntries);
             groupBox2.Controls.Add(label46);
-            groupBox2.Location = new Point(12, 321);
+            groupBox2.Location = new Point(12, 340);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(991, 265);
+            groupBox2.Size = new Size(991, 276);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
             groupBox2.Text = "groupBox2";
@@ -302,10 +304,10 @@
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(8, 48);
+            dataGridView1.Location = new Point(8, 50);
             dataGridView1.Margin = new Padding(4, 3, 4, 3);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(983, 204);
+            dataGridView1.Size = new Size(983, 222);
             dataGridView1.TabIndex = 54;
             // 
             // label41
@@ -421,6 +423,7 @@
             // 
             // grpMachineStatus
             // 
+            grpMachineStatus.Controls.Add(grpTimeParameters);
             grpMachineStatus.Controls.Add(lblProgStatus);
             grpMachineStatus.Controls.Add(txtDeltaTimePoti);
             grpMachineStatus.Controls.Add(txtUpdatedOnPoti);
@@ -430,14 +433,8 @@
             grpMachineStatus.Controls.Add(txtItemPoti);
             grpMachineStatus.Controls.Add(label6);
             grpMachineStatus.Controls.Add(txtItemProgStatus);
-            grpMachineStatus.Controls.Add(label42);
-            grpMachineStatus.Controls.Add(txtIgnoneBreaksTime);
-            grpMachineStatus.Controls.Add(label45);
             grpMachineStatus.Controls.Add(chkMachineStatus_ReadSQLAfterChanges);
             grpMachineStatus.Controls.Add(chkMachineStatus_Add2SQL);
-            grpMachineStatus.Controls.Add(label33);
-            grpMachineStatus.Controls.Add(txtCycleTimeMStatus);
-            grpMachineStatus.Controls.Add(label32);
             grpMachineStatus.Controls.Add(btnWriteMStatus_Stop);
             grpMachineStatus.Controls.Add(btnWriteMStatus_Start);
             grpMachineStatus.Controls.Add(label39);
@@ -451,10 +448,84 @@
             grpMachineStatus.Controls.Add(txtValuePoti);
             grpMachineStatus.Location = new Point(12, 74);
             grpMachineStatus.Name = "grpMachineStatus";
-            grpMachineStatus.Size = new Size(520, 211);
+            grpMachineStatus.Size = new Size(520, 233);
             grpMachineStatus.TabIndex = 14;
             grpMachineStatus.TabStop = false;
             grpMachineStatus.Text = "Maschine Status";
+            // 
+            // grpTimeParameters
+            // 
+            grpTimeParameters.BackColor = SystemColors.Highlight;
+            grpTimeParameters.Controls.Add(txtIgnoneBreaksTime);
+            grpTimeParameters.Controls.Add(label32);
+            grpTimeParameters.Controls.Add(txtCycleTimeMStatus);
+            grpTimeParameters.Controls.Add(label33);
+            grpTimeParameters.Controls.Add(label45);
+            grpTimeParameters.Controls.Add(label42);
+            grpTimeParameters.Location = new Point(223, 131);
+            grpTimeParameters.Name = "grpTimeParameters";
+            grpTimeParameters.Size = new Size(288, 90);
+            grpTimeParameters.TabIndex = 72;
+            grpTimeParameters.TabStop = false;
+            grpTimeParameters.Text = "Einstellungen";
+            // 
+            // txtIgnoneBreaksTime
+            // 
+            txtIgnoneBreaksTime.Location = new Point(135, 52);
+            txtIgnoneBreaksTime.Margin = new Padding(4, 3, 4, 3);
+            txtIgnoneBreaksTime.Name = "txtIgnoneBreaksTime";
+            txtIgnoneBreaksTime.Size = new Size(97, 23);
+            txtIgnoneBreaksTime.TabIndex = 56;
+            txtIgnoneBreaksTime.Text = "10";
+            // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Location = new Point(63, 14);
+            label32.Margin = new Padding(4, 0, 4, 0);
+            label32.Name = "label32";
+            label32.Size = new Size(62, 15);
+            label32.TabIndex = 50;
+            label32.Text = "CycleTime";
+            // 
+            // txtCycleTimeMStatus
+            // 
+            txtCycleTimeMStatus.Location = new Point(135, 11);
+            txtCycleTimeMStatus.Margin = new Padding(4, 3, 4, 3);
+            txtCycleTimeMStatus.Name = "txtCycleTimeMStatus";
+            txtCycleTimeMStatus.Size = new Size(97, 23);
+            txtCycleTimeMStatus.TabIndex = 51;
+            // 
+            // label33
+            // 
+            label33.AutoSize = true;
+            label33.Location = new Point(240, 19);
+            label33.Margin = new Padding(4, 0, 4, 0);
+            label33.Name = "label33";
+            label33.Size = new Size(23, 15);
+            label33.TabIndex = 52;
+            label33.Text = "ms";
+            // 
+            // label45
+            // 
+            label45.AutoSize = true;
+            label45.Location = new Point(9, 41);
+            label45.Margin = new Padding(4, 0, 4, 0);
+            label45.Name = "label45";
+            label45.Size = new Size(118, 45);
+            label45.TabIndex = 55;
+            label45.Text = "Keine Begründung\r\nfür Unterbrechungen\r\nkleiner als";
+            label45.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label42
+            // 
+            label42.AutoSize = true;
+            label42.Location = new Point(240, 56);
+            label42.Margin = new Padding(4, 0, 4, 0);
+            label42.Name = "label42";
+            label42.Size = new Size(24, 15);
+            label42.TabIndex = 57;
+            label42.Text = "sec";
             // 
             // lblProgStatus
             // 
@@ -535,36 +606,6 @@
             txtItemProgStatus.TabIndex = 58;
             txtItemProgStatus.Text = "ns=2;s=Tag11";
             // 
-            // label42
-            // 
-            label42.AutoSize = true;
-            label42.Location = new Point(465, 174);
-            label42.Margin = new Padding(4, 0, 4, 0);
-            label42.Name = "label42";
-            label42.Size = new Size(24, 15);
-            label42.TabIndex = 57;
-            label42.Text = "sec";
-            // 
-            // txtIgnoneBreaksTime
-            // 
-            txtIgnoneBreaksTime.Location = new Point(341, 170);
-            txtIgnoneBreaksTime.Margin = new Padding(4, 3, 4, 3);
-            txtIgnoneBreaksTime.Name = "txtIgnoneBreaksTime";
-            txtIgnoneBreaksTime.Size = new Size(116, 23);
-            txtIgnoneBreaksTime.TabIndex = 56;
-            txtIgnoneBreaksTime.Text = "10";
-            // 
-            // label45
-            // 
-            label45.AutoSize = true;
-            label45.Location = new Point(215, 159);
-            label45.Margin = new Padding(4, 0, 4, 0);
-            label45.Name = "label45";
-            label45.Size = new Size(118, 45);
-            label45.TabIndex = 55;
-            label45.Text = "Keine Begründung\r\nfür Unterbrechungen\r\nkleiner als";
-            label45.TextAlign = ContentAlignment.MiddleRight;
-            // 
             // chkMachineStatus_ReadSQLAfterChanges
             // 
             chkMachineStatus_ReadSQLAfterChanges.AutoSize = true;
@@ -586,34 +627,6 @@
             chkMachineStatus_Add2SQL.TabIndex = 53;
             chkMachineStatus_Add2SQL.Text = "Änderung auf SQL hinzufügen";
             chkMachineStatus_Add2SQL.UseVisualStyleBackColor = true;
-            // 
-            // label33
-            // 
-            label33.AutoSize = true;
-            label33.Location = new Point(465, 132);
-            label33.Margin = new Padding(4, 0, 4, 0);
-            label33.Name = "label33";
-            label33.Size = new Size(23, 15);
-            label33.TabIndex = 52;
-            label33.Text = "ms";
-            // 
-            // txtCycleTimeMStatus
-            // 
-            txtCycleTimeMStatus.Location = new Point(341, 129);
-            txtCycleTimeMStatus.Margin = new Padding(4, 3, 4, 3);
-            txtCycleTimeMStatus.Name = "txtCycleTimeMStatus";
-            txtCycleTimeMStatus.Size = new Size(116, 23);
-            txtCycleTimeMStatus.TabIndex = 51;
-            // 
-            // label32
-            // 
-            label32.AutoSize = true;
-            label32.Location = new Point(269, 132);
-            label32.Margin = new Padding(4, 0, 4, 0);
-            label32.Name = "label32";
-            label32.Size = new Size(62, 15);
-            label32.TabIndex = 50;
-            label32.Text = "CycleTime";
             // 
             // btnWriteMStatus_Stop
             // 
@@ -898,7 +911,7 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new Point(19, 296);
+            label21.Location = new Point(19, 316);
             label21.Margin = new Padding(4, 0, 4, 0);
             label21.Name = "label21";
             label21.Size = new Size(39, 15);
@@ -907,14 +920,14 @@
             // 
             // txtQuery
             // 
-            txtQuery.Location = new Point(68, 293);
+            txtQuery.Location = new Point(68, 313);
             txtQuery.Name = "txtQuery";
             txtQuery.Size = new Size(813, 23);
             txtQuery.TabIndex = 71;
             // 
             // btnSendQuery
             // 
-            btnSendQuery.Location = new Point(888, 290);
+            btnSendQuery.Location = new Point(888, 310);
             btnSendQuery.Margin = new Padding(4, 3, 4, 3);
             btnSendQuery.Name = "btnSendQuery";
             btnSendQuery.Size = new Size(105, 27);
@@ -925,7 +938,7 @@
             // 
             // btnInsertToMachineStatusSQL
             // 
-            btnInsertToMachineStatusSQL.Location = new Point(834, 259);
+            btnInsertToMachineStatusSQL.Location = new Point(834, 279);
             btnInsertToMachineStatusSQL.Margin = new Padding(4, 3, 4, 3);
             btnInsertToMachineStatusSQL.Name = "btnInsertToMachineStatusSQL";
             btnInsertToMachineStatusSQL.Size = new Size(159, 27);
@@ -938,7 +951,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1062, 598);
+            ClientSize = new Size(1062, 628);
             Controls.Add(btnInsertToMachineStatusSQL);
             Controls.Add(btnSendQuery);
             Controls.Add(txtQuery);
@@ -963,6 +976,8 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             grpMachineStatus.ResumeLayout(false);
             grpMachineStatus.PerformLayout();
+            grpTimeParameters.ResumeLayout(false);
+            grpTimeParameters.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1053,5 +1068,6 @@
         private Button btnSendQuery;
         private Button btnInsertToMachineStatusSQL;
         private Label lblProgStatus;
+        private GroupBox grpTimeParameters;
     }
 }

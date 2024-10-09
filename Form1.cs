@@ -1,6 +1,7 @@
 //https://www.youtube.com/watch?v=A1xNi4quuk4
 //https://github.com/OPCFoundation/UA-.NETStandard-Samples/tree/master/Samples/Client
 //https://github.com/OPCFoundation/UA-.NETStandard-Samples/tree/master/Workshop/Views/Client
+
 using Opc.Ua;
 using Opc.Ua.Client;
 using OpcUaHelper;
@@ -9,7 +10,8 @@ using System.Timers; // For timer functionality
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using static Org.BouncyCastle.Math.Primes;
-using MyTimeNamespace; //my class for time functions
+using MyTimeNamespace;
+using System.Data.Common; //my class for time functions
 
 namespace OPC_UA_Client
 {
@@ -19,8 +21,9 @@ namespace OPC_UA_Client
         // Create library instances
         OpcUaClient myClient = new OpcUaClient();
         MyTime myTime = new MyTime();
-        MySQL mySQL = new MySQL();
+        private MySQL mySQL; // similar to MySQL mySQL = new MySQL() but without constructor argument
         MyGUI myGUI = new MyGUI();
+        private MyOpcClient myOpcClient;  // Declare MyOpcClient as a field
 
 
         private DataTable dataTable;  // To store data
@@ -49,23 +52,12 @@ namespace OPC_UA_Client
             opcTimerMStatus = new System.Timers.Timer();
             opcTimerMStatus.Elapsed += OpcTimerMStatus_Elapsed;
 
-            // ComboBox Databanks - First entry appears first at the dropdown list
-            string[] availableDatabanks = { "ProductionData", "MachineStatus" };
-            for (int i = 0; i < availableDatabanks.Length; i++)
-            {
-                cmbSelectedDatabankGeneral.Items.Add(availableDatabanks[i]); // General - Fill Available Databanks 
-            }
+            InitializeComboBoxes();
 
-        }
-
-        // In your Form constructor or Form_Load method, start the timer
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            btnDisconnect.Enabled = false;
-            grpRW.Enabled = false;
-            grpMachineStatus.Enabled = false;
-
-            timer1.Start(); // UI clock timer for system time
+            // Create a DataTable with sample data
+            dataTable = new DataTable();
+            // Bind the DataGridView to the DataTable
+            dataGridView1.DataSource = dataTable;
 
             // Get the directory of the current executable
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -75,6 +67,37 @@ namespace OPC_UA_Client
 
             // Check if the file exists and load the data
             LoadXmlConfig();
+
+            // Initialize MyOpcClient
+            myOpcClient = new MyOpcClient();
+            mySQL = new MySQL(connectionString);
+
+        }
+
+        
+
+    private void InitializeComboBoxes()
+    {
+        // ComboBox Databanks - First entry appears first at the dropdown list
+        string[] availableDatabanks = { "ProductionData", "MachineStatus" };
+        for (int i = 0; i < availableDatabanks.Length; i++)
+        {
+            cmbSelectedDatabankGeneral.Items.Add(availableDatabanks[i]); // General - Fill Available Databanks 
+        }
+    }
+
+
+
+    // In your Form constructor or Form_Load method, start the timer
+    private void Form1_Load(object sender, EventArgs e)
+        {
+            btnDisconnect.Enabled = false;
+            grpRW.Enabled = false;
+            grpMachineStatus.Enabled = false;
+
+            timer1.Start(); // UI clock timer for system time
+
+            
         }
 
         private void LoadXmlConfig()
@@ -116,8 +139,11 @@ namespace OPC_UA_Client
 
             try
             {
-                myClient.ConnectServer(txtServer.Text);
+
+                string serverURL = txtServer.Text;
+                myClient.ConnectServer(serverURL);
                 if (myClient.Connected)
+                //if (myOpcClient.Connect(serverURL))
                 {
                     btnConnect.Enabled = false;
                     btnDisconnect.Enabled = true;
@@ -134,7 +160,7 @@ namespace OPC_UA_Client
 
         private void btnDisconnect_Click(object sender, EventArgs e)
         {
-            myClient.Disconnect();
+            myOpcClient.Disconnect();
             btnConnect.Enabled = true;
             btnDisconnect.Enabled = false;
             grpRW.Enabled = false;
@@ -268,17 +294,23 @@ namespace OPC_UA_Client
         private void btnReadAllSQLEntries_Click(object sender, EventArgs e)
         {
             // Databank selection
-            string selectedDatabankFilter = getDatabankGeneralSelection();
-            if (selectedDatabankFilter == null) return;
+            string selectedTable = GetSelectedTable(); // Create a method to choose the table
+            if (string.IsNullOrEmpty(selectedTable))
+            {
+                MessageBox.Show("Please select a table.");
+                return;
+            }
 
-            string query = "SELECT * FROM " + selectedDatabankFilter;
-            //string query = "SELECT * FROM " + selectedDatabankFilter + " WHERE Machine = '" + machineNo + "'";
+            string query = "SELECT * FROM " + selectedTable;
+            //string query = "SELECT * FROM " + selectedTable + " WHERE Machine = '" + machineNo + "'";
 
             //ExecuteCustomQuery(query, dataGridView1);
-            mySQL.ExecuteCustomQuery(connectionString, query, dataGridView1);
+            //mySQL.ExecuteCustomQuery(query, dataGridView1);
+            dataTable = mySQL.LoadData(selectedTable, dataGridView1);
+            dataGridView1.DataSource = dataTable;
         }
 
-        private string getDatabankGeneralSelection()
+        private string GetSelectedTable()
         {
             string selectedDatabankFilter = null;
             if (cmbSelectedDatabankGeneral.SelectedIndex == -1) //if No selection
@@ -297,8 +329,12 @@ namespace OPC_UA_Client
         private void btnSaveSQLChanges_Click(object sender, EventArgs e)
         {
             // Databank selection
-            string selectedDatabankFilter = getDatabankGeneralSelection();
-            if (selectedDatabankFilter == null) return;
+            string selectedTable = GetSelectedTable(); // Create a method to choose the table
+            if (string.IsNullOrEmpty(selectedTable))
+            {
+                MessageBox.Show("Please select a table.");
+                return;
+            }
 
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
@@ -306,128 +342,16 @@ namespace OPC_UA_Client
                 return;
             }
 
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                // Start a transaction to ensure all updates are applied together
-                SqlTransaction transaction = conn.BeginTransaction();
-                try
-                {
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        // Check if the row has been modified
-                        if (row.RowState == DataRowState.Modified)
-                        {
-                            // Prepare Query
-                            // ** InsertTime is missing
-                            string productionDataMsg = "Machine = @Machine, ProgStatus = @ProgStatus, ProgPfadName = @ProgPfadName, LineContent = @LineContent, ToolIdent = @ToolIdent, Overrid = @Overrid, MFunktion = @MFunktion, OpMode = @OpMode, VorschubSpdl = @VorschubSpdl, Comment = @Comment WHERE EventID = @EventID";
-                            string machineStatusMsg = "Machine = @Machine, ProgStatus = @ProgStatus, LastUpdate = @LastUpdate, Comment = @Comment WHERE EventID = @EventID";
-                            string sqlMsg = "";
-                            if (selectedDatabankFilter == "ProductionData")
-                            {
-                                sqlMsg = productionDataMsg;
-                            }
-                            else if (selectedDatabankFilter == "MachineStatus")
-                            {
-                                sqlMsg = machineStatusMsg;
-                            }
-
-                            string query = "UPDATE " + selectedDatabankFilter + " SET " + sqlMsg;
-                            SqlCommand cmd = new SqlCommand(query, conn, transaction);
-
-                            // Add parameters from the DataTable row
-                            cmd.Parameters.AddWithValue("@EventID", row["EventID"]);
-                            cmd.Parameters.AddWithValue("@Machine", row["Machine"]);
-                            cmd.Parameters.AddWithValue("@ProgStatus", row["ProgStatus"]);
-                            cmd.Parameters.AddWithValue("@InsertTime", row["InsertTime"]);
-                            cmd.Parameters.AddWithValue("@Comment", row["Comment"]);
-
-                            if (selectedDatabankFilter == "ProductionData")
-                            {
-                                cmd.Parameters.AddWithValue("@ProgPfadName", row["ProgPfadName"]);
-                                cmd.Parameters.AddWithValue("@LineContent", row["LineContent"]);
-                                cmd.Parameters.AddWithValue("@ToolIdent", row["ToolIdent"]);
-                                cmd.Parameters.AddWithValue("@Overrid", row["Overrid"]);
-                                cmd.Parameters.AddWithValue("@MFunktion", row["MFunktion"]);
-                                cmd.Parameters.AddWithValue("@OpMode", row["OpMode"]);
-                                cmd.Parameters.AddWithValue("@VorschubSpdl", row["VorschubSpdl"]);
-                            }
-                            else if (selectedDatabankFilter == "MachineStatus")
-                            {
-                                cmd.Parameters.AddWithValue("@LastUpdate", row["LastUpdate"]);
-                            }
-
-                            cmd.ExecuteNonQuery();
-                        }
-                        // Check if the row is new (Added)
-                        else if (row.RowState == DataRowState.Added)
-                        {
-                            // Prepare Query
-                            string productionDataMsg = "Machine, ProgStatus, ProgPfadName, ToolIdent, LineContent, Overrid, InsertTime, MFunktion, OpMode, VorschubSpdl, Comment) VALUES(@Machine, @ProgStatus, @ProgPfadName, @LineContent, @ToolIdent, @Overrid, @MFunktion, @OpMode, @VorschubSpdl, @Comment @InsertTime";
-                            string machineStatusMsg = "Machine, ProgStatus, LastUpdate, InsertTime, Comment";
-                            string sqlMsg = "";
-                            if (selectedDatabankFilter == "ProductionData")
-                            {
-                                sqlMsg = productionDataMsg;
-                            }
-                            else if (selectedDatabankFilter == "MachineStatus")
-                            {
-                                sqlMsg = machineStatusMsg;
-                            }
-
-                            // Insert new row into the database 
-                            string query = "INSERT INTO " + selectedDatabankFilter + " (" + sqlMsg + ")";
-                            SqlCommand cmd = new SqlCommand(query, conn, transaction);
-
-                            // Add parameters for new data
-                            cmd.Parameters.AddWithValue("@Machine", row["Machine"]);
-                            cmd.Parameters.AddWithValue("@ProgStatus", row["ProgStatus"]);
-                            cmd.Parameters.AddWithValue("@Comment", row["Comment"]);
-                            // ** InsertTime is missing
-                            if (selectedDatabankFilter == "ProductionData")
-                            {
-                                cmd.Parameters.AddWithValue("@ProgPfadName", row["ProgPfadName"]);
-                                cmd.Parameters.AddWithValue("@LineContent", row["LineContent"]);
-                                cmd.Parameters.AddWithValue("@ToolIdent", row["ToolIdent"]);
-                                cmd.Parameters.AddWithValue("@Overrid", row["Overrid"]);
-                                cmd.Parameters.AddWithValue("@MFunktion", row["MFunktion"]);
-                                cmd.Parameters.AddWithValue("@OpMode", row["OpMode"]);
-                                cmd.Parameters.AddWithValue("@VorschubSpdl", row["VorschubSpdl"]);
-                            }
-                            else if (selectedDatabankFilter == "MachineStatus")
-                            {
-                                cmd.Parameters.AddWithValue("@LastUpdate", row["LastUpdate"]);
-                            }
-
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-
-                    // Commit transaction
-                    transaction.Commit();
-                    MessageBox.Show("Changes saved successfully!");
-
-                    // Accept changes in the DataTable
-                    dataTable.AcceptChanges();
-                }
-                catch (Exception ex)
-                {
-                    // Rollback transaction in case of error
-                    transaction.Rollback();
-                    MessageBox.Show("Error saving changes: " + ex.Message);
-                }
-            }
+            mySQL.SaveData(dataTable,selectedTable);
         }
-        #endregion
+            #endregion
 
-        private void btnDeleteSQLEntry_Click(object sender, EventArgs e)
+            private void btnDeleteSQLEntry_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count > 0)
             {
                 // Databank selection
-                string selectedDatabankFilter = getDatabankGeneralSelection();
+                string selectedDatabankFilter = GetSelectedTable();
                 if (selectedDatabankFilter == null) return;
 
                 // Get the selected row's Id (assuming Id is the first column)
@@ -435,7 +359,7 @@ namespace OPC_UA_Client
                 // int selectedId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["UserID"].Value); // Old SQL
                 int selectedId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["EventID"].Value);
 
-                mySQL.DeleteEntry(connectionString, selectedId, selectedDatabankFilter, dataGridView1);
+                mySQL.DeleteEntry(selectedId, selectedDatabankFilter, dataGridView1);
             }
             else
             {
@@ -548,12 +472,12 @@ namespace OPC_UA_Client
             }
 
             // Execute the custom query and display results in dataGridView1
-            mySQL.ExecuteCustomQuery(connectionString, query, dataGridView1);
+            mySQL.ExecuteCustomQuery(query, dataGridView1);
         }
 
         private void btnInsertToMachineStatusSQL_Click(object sender, EventArgs e)
         {
-            mySQL.insertMachineStatus(connectionString, lblMachineNo.Text, true, int.Parse(txtIgnoneBreaksTime.Text),
+            mySQL.insertMachineStatus(lblMachineNo.Text, true, int.Parse(txtIgnoneBreaksTime.Text),
                 txtValueProgStatus.Text, txtUpdatedOnProgStatus.Text, txtSameSinceProgStatus.Text);
         }
 
@@ -562,7 +486,7 @@ namespace OPC_UA_Client
             string progStatus = txtValueProgStatus.Text;
             // Change appearance according to value
             (txtValueProgStatus.BackColor, lblProgStatus.ForeColor, lblProgStatus.Text) = myGUI.AppearanceFromValue(progStatus, txtValueProgStatus, lblProgStatus);
-            
+
         }
     }
 }
