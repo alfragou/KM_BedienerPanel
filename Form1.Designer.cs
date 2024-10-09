@@ -61,6 +61,8 @@
             lblMachineNo = new Label();
             label8 = new Label();
             grpMachineStatus = new GroupBox();
+            lblProgStatus = new Label();
+            txtDeltaTimePoti = new TextBox();
             txtUpdatedOnPoti = new TextBox();
             txtSameSincePoti = new TextBox();
             label9 = new Label();
@@ -69,7 +71,7 @@
             label6 = new Label();
             txtItemProgStatus = new TextBox();
             label42 = new Label();
-            txtIgnoneBrakesTime = new TextBox();
+            txtIgnoneBreaksTime = new TextBox();
             label45 = new Label();
             chkMachineStatus_ReadSQLAfterChanges = new CheckBox();
             chkMachineStatus_Add2SQL = new CheckBox();
@@ -105,7 +107,10 @@
             label18 = new Label();
             label19 = new Label();
             label20 = new Label();
-            txtDeltaTimePoti = new TextBox();
+            label21 = new Label();
+            txtQuery = new TextBox();
+            btnSendQuery = new Button();
+            btnInsertToMachineStatusSQL = new Button();
             grpRW.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -287,7 +292,7 @@
             groupBox2.Controls.Add(btnDeleteSQLEntry);
             groupBox2.Controls.Add(btnReadAllSQLEntries);
             groupBox2.Controls.Add(label46);
-            groupBox2.Location = new Point(12, 303);
+            groupBox2.Location = new Point(12, 321);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(991, 265);
             groupBox2.TabIndex = 8;
@@ -416,6 +421,7 @@
             // 
             // grpMachineStatus
             // 
+            grpMachineStatus.Controls.Add(lblProgStatus);
             grpMachineStatus.Controls.Add(txtDeltaTimePoti);
             grpMachineStatus.Controls.Add(txtUpdatedOnPoti);
             grpMachineStatus.Controls.Add(txtSameSincePoti);
@@ -425,7 +431,7 @@
             grpMachineStatus.Controls.Add(label6);
             grpMachineStatus.Controls.Add(txtItemProgStatus);
             grpMachineStatus.Controls.Add(label42);
-            grpMachineStatus.Controls.Add(txtIgnoneBrakesTime);
+            grpMachineStatus.Controls.Add(txtIgnoneBreaksTime);
             grpMachineStatus.Controls.Add(label45);
             grpMachineStatus.Controls.Add(chkMachineStatus_ReadSQLAfterChanges);
             grpMachineStatus.Controls.Add(chkMachineStatus_Add2SQL);
@@ -445,14 +451,33 @@
             grpMachineStatus.Controls.Add(txtValuePoti);
             grpMachineStatus.Location = new Point(12, 74);
             grpMachineStatus.Name = "grpMachineStatus";
-            grpMachineStatus.Size = new Size(520, 223);
+            grpMachineStatus.Size = new Size(520, 211);
             grpMachineStatus.TabIndex = 14;
             grpMachineStatus.TabStop = false;
             grpMachineStatus.Text = "Maschine Status";
             // 
+            // lblProgStatus
+            // 
+            lblProgStatus.AutoSize = true;
+            lblProgStatus.Location = new Point(56, 48);
+            lblProgStatus.Margin = new Padding(4, 0, 4, 0);
+            lblProgStatus.Name = "lblProgStatus";
+            lblProgStatus.Size = new Size(37, 15);
+            lblProgStatus.TabIndex = 71;
+            lblProgStatus.Text = "Stand";
+            lblProgStatus.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // txtDeltaTimePoti
+            // 
+            txtDeltaTimePoti.Location = new Point(391, 100);
+            txtDeltaTimePoti.Margin = new Padding(4, 3, 4, 3);
+            txtDeltaTimePoti.Name = "txtDeltaTimePoti";
+            txtDeltaTimePoti.Size = new Size(122, 23);
+            txtDeltaTimePoti.TabIndex = 70;
+            // 
             // txtUpdatedOnPoti
             // 
-            txtUpdatedOnPoti.Location = new Point(128, 109);
+            txtUpdatedOnPoti.Location = new Point(128, 102);
             txtUpdatedOnPoti.Margin = new Padding(4, 3, 4, 3);
             txtUpdatedOnPoti.Name = "txtUpdatedOnPoti";
             txtUpdatedOnPoti.Size = new Size(122, 23);
@@ -460,7 +485,7 @@
             // 
             // txtSameSincePoti
             // 
-            txtSameSincePoti.Location = new Point(264, 107);
+            txtSameSincePoti.Location = new Point(264, 100);
             txtSameSincePoti.Margin = new Padding(4, 3, 4, 3);
             txtSameSincePoti.Name = "txtSameSincePoti";
             txtSameSincePoti.Size = new Size(122, 23);
@@ -513,26 +538,26 @@
             // label42
             // 
             label42.AutoSize = true;
-            label42.Location = new Point(465, 181);
+            label42.Location = new Point(465, 174);
             label42.Margin = new Padding(4, 0, 4, 0);
             label42.Name = "label42";
             label42.Size = new Size(24, 15);
             label42.TabIndex = 57;
             label42.Text = "sec";
             // 
-            // txtIgnoneBrakesTime
+            // txtIgnoneBreaksTime
             // 
-            txtIgnoneBrakesTime.Location = new Point(341, 177);
-            txtIgnoneBrakesTime.Margin = new Padding(4, 3, 4, 3);
-            txtIgnoneBrakesTime.Name = "txtIgnoneBrakesTime";
-            txtIgnoneBrakesTime.Size = new Size(116, 23);
-            txtIgnoneBrakesTime.TabIndex = 56;
-            txtIgnoneBrakesTime.Text = "10";
+            txtIgnoneBreaksTime.Location = new Point(341, 170);
+            txtIgnoneBreaksTime.Margin = new Padding(4, 3, 4, 3);
+            txtIgnoneBreaksTime.Name = "txtIgnoneBreaksTime";
+            txtIgnoneBreaksTime.Size = new Size(116, 23);
+            txtIgnoneBreaksTime.TabIndex = 56;
+            txtIgnoneBreaksTime.Text = "10";
             // 
             // label45
             // 
             label45.AutoSize = true;
-            label45.Location = new Point(215, 166);
+            label45.Location = new Point(215, 159);
             label45.Margin = new Padding(4, 0, 4, 0);
             label45.Name = "label45";
             label45.Size = new Size(118, 45);
@@ -543,7 +568,7 @@
             // chkMachineStatus_ReadSQLAfterChanges
             // 
             chkMachineStatus_ReadSQLAfterChanges.AutoSize = true;
-            chkMachineStatus_ReadSQLAfterChanges.Location = new Point(10, 197);
+            chkMachineStatus_ReadSQLAfterChanges.Location = new Point(10, 185);
             chkMachineStatus_ReadSQLAfterChanges.Margin = new Padding(4, 3, 4, 3);
             chkMachineStatus_ReadSQLAfterChanges.Name = "chkMachineStatus_ReadSQLAfterChanges";
             chkMachineStatus_ReadSQLAfterChanges.Size = new Size(142, 19);
@@ -554,7 +579,7 @@
             // chkMachineStatus_Add2SQL
             // 
             chkMachineStatus_Add2SQL.AutoSize = true;
-            chkMachineStatus_Add2SQL.Location = new Point(10, 170);
+            chkMachineStatus_Add2SQL.Location = new Point(10, 163);
             chkMachineStatus_Add2SQL.Margin = new Padding(4, 3, 4, 3);
             chkMachineStatus_Add2SQL.Name = "chkMachineStatus_Add2SQL";
             chkMachineStatus_Add2SQL.Size = new Size(186, 19);
@@ -565,7 +590,7 @@
             // label33
             // 
             label33.AutoSize = true;
-            label33.Location = new Point(465, 139);
+            label33.Location = new Point(465, 132);
             label33.Margin = new Padding(4, 0, 4, 0);
             label33.Name = "label33";
             label33.Size = new Size(23, 15);
@@ -574,7 +599,7 @@
             // 
             // txtCycleTimeMStatus
             // 
-            txtCycleTimeMStatus.Location = new Point(341, 136);
+            txtCycleTimeMStatus.Location = new Point(341, 129);
             txtCycleTimeMStatus.Margin = new Padding(4, 3, 4, 3);
             txtCycleTimeMStatus.Name = "txtCycleTimeMStatus";
             txtCycleTimeMStatus.Size = new Size(116, 23);
@@ -583,7 +608,7 @@
             // label32
             // 
             label32.AutoSize = true;
-            label32.Location = new Point(269, 139);
+            label32.Location = new Point(269, 132);
             label32.Margin = new Padding(4, 0, 4, 0);
             label32.Name = "label32";
             label32.Size = new Size(62, 15);
@@ -594,7 +619,7 @@
             // 
             btnWriteMStatus_Stop.BackColor = Color.White;
             btnWriteMStatus_Stop.ForeColor = Color.Red;
-            btnWriteMStatus_Stop.Location = new Point(128, 136);
+            btnWriteMStatus_Stop.Location = new Point(128, 129);
             btnWriteMStatus_Stop.Margin = new Padding(4, 3, 4, 3);
             btnWriteMStatus_Stop.Name = "btnWriteMStatus_Stop";
             btnWriteMStatus_Stop.Size = new Size(88, 27);
@@ -607,7 +632,7 @@
             // 
             btnWriteMStatus_Start.BackColor = Color.White;
             btnWriteMStatus_Start.ForeColor = Color.Green;
-            btnWriteMStatus_Start.Location = new Point(10, 136);
+            btnWriteMStatus_Start.Location = new Point(10, 129);
             btnWriteMStatus_Start.Margin = new Padding(4, 3, 4, 3);
             btnWriteMStatus_Start.Name = "btnWriteMStatus_Start";
             btnWriteMStatus_Start.Size = new Size(88, 27);
@@ -619,7 +644,7 @@
             // label39
             // 
             label39.AutoSize = true;
-            label39.Location = new Point(388, 52);
+            label39.Location = new Point(391, 50);
             label39.Margin = new Padding(4, 0, 4, 0);
             label39.Name = "label39";
             label39.Size = new Size(120, 15);
@@ -628,7 +653,7 @@
             // 
             // txtDeltaTimeProgStatus
             // 
-            txtDeltaTimeProgStatus.Location = new Point(391, 80);
+            txtDeltaTimeProgStatus.Location = new Point(391, 73);
             txtDeltaTimeProgStatus.Margin = new Padding(4, 3, 4, 3);
             txtDeltaTimeProgStatus.Name = "txtDeltaTimeProgStatus";
             txtDeltaTimeProgStatus.Size = new Size(122, 23);
@@ -636,7 +661,7 @@
             // 
             // txtUpdatedOnProgStatus
             // 
-            txtUpdatedOnProgStatus.Location = new Point(129, 80);
+            txtUpdatedOnProgStatus.Location = new Point(129, 73);
             txtUpdatedOnProgStatus.Margin = new Padding(4, 3, 4, 3);
             txtUpdatedOnProgStatus.Name = "txtUpdatedOnProgStatus";
             txtUpdatedOnProgStatus.Size = new Size(122, 23);
@@ -645,7 +670,7 @@
             // label37
             // 
             label37.AutoSize = true;
-            label37.Location = new Point(125, 55);
+            label37.Location = new Point(125, 48);
             label37.Margin = new Padding(4, 0, 4, 0);
             label37.Name = "label37";
             label37.Size = new Size(86, 15);
@@ -655,7 +680,7 @@
             // label30
             // 
             label30.AutoSize = true;
-            label30.Location = new Point(261, 52);
+            label30.Location = new Point(264, 48);
             label30.Margin = new Padding(4, 0, 4, 0);
             label30.Name = "label30";
             label30.Size = new Size(62, 15);
@@ -664,7 +689,7 @@
             // 
             // txtSameSinceProgStatus
             // 
-            txtSameSinceProgStatus.Location = new Point(264, 80);
+            txtSameSinceProgStatus.Location = new Point(264, 73);
             txtSameSinceProgStatus.Margin = new Padding(4, 3, 4, 3);
             txtSameSinceProgStatus.Name = "txtSameSinceProgStatus";
             txtSameSinceProgStatus.Size = new Size(122, 23);
@@ -682,14 +707,15 @@
             // 
             // txtValueProgStatus
             // 
-            txtValueProgStatus.Location = new Point(56, 80);
+            txtValueProgStatus.Location = new Point(56, 73);
             txtValueProgStatus.Name = "txtValueProgStatus";
             txtValueProgStatus.Size = new Size(65, 23);
             txtValueProgStatus.TabIndex = 14;
+            txtValueProgStatus.TextChanged += txtValueProgStatus_TextChanged;
             // 
             // txtValuePoti
             // 
-            txtValuePoti.Location = new Point(56, 109);
+            txtValuePoti.Location = new Point(56, 102);
             txtValuePoti.Name = "txtValuePoti";
             txtValuePoti.Size = new Size(65, 23);
             txtValuePoti.TabIndex = 69;
@@ -869,19 +895,54 @@
             label20.TabIndex = 43;
             label20.Text = "Status";
             // 
-            // txtDeltaTimePoti
+            // label21
             // 
-            txtDeltaTimePoti.Location = new Point(391, 107);
-            txtDeltaTimePoti.Margin = new Padding(4, 3, 4, 3);
-            txtDeltaTimePoti.Name = "txtDeltaTimePoti";
-            txtDeltaTimePoti.Size = new Size(122, 23);
-            txtDeltaTimePoti.TabIndex = 70;
+            label21.AutoSize = true;
+            label21.Location = new Point(19, 296);
+            label21.Margin = new Padding(4, 0, 4, 0);
+            label21.Name = "label21";
+            label21.Size = new Size(39, 15);
+            label21.TabIndex = 55;
+            label21.Text = "Query";
+            // 
+            // txtQuery
+            // 
+            txtQuery.Location = new Point(68, 293);
+            txtQuery.Name = "txtQuery";
+            txtQuery.Size = new Size(813, 23);
+            txtQuery.TabIndex = 71;
+            // 
+            // btnSendQuery
+            // 
+            btnSendQuery.Location = new Point(888, 290);
+            btnSendQuery.Margin = new Padding(4, 3, 4, 3);
+            btnSendQuery.Name = "btnSendQuery";
+            btnSendQuery.Size = new Size(105, 27);
+            btnSendQuery.TabIndex = 55;
+            btnSendQuery.Text = "Send Query";
+            btnSendQuery.UseVisualStyleBackColor = true;
+            btnSendQuery.Click += btnSendQuery_Click;
+            // 
+            // btnInsertToMachineStatusSQL
+            // 
+            btnInsertToMachineStatusSQL.Location = new Point(834, 259);
+            btnInsertToMachineStatusSQL.Margin = new Padding(4, 3, 4, 3);
+            btnInsertToMachineStatusSQL.Name = "btnInsertToMachineStatusSQL";
+            btnInsertToMachineStatusSQL.Size = new Size(159, 27);
+            btnInsertToMachineStatusSQL.TabIndex = 72;
+            btnInsertToMachineStatusSQL.Text = "Insert->MachineStatusSQL";
+            btnInsertToMachineStatusSQL.UseVisualStyleBackColor = true;
+            btnInsertToMachineStatusSQL.Click += btnInsertToMachineStatusSQL_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1062, 580);
+            ClientSize = new Size(1062, 598);
+            Controls.Add(btnInsertToMachineStatusSQL);
+            Controls.Add(btnSendQuery);
+            Controls.Add(txtQuery);
+            Controls.Add(label21);
             Controls.Add(label34);
             Controls.Add(grpMachineStatus);
             Controls.Add(lblMachineNo);
@@ -941,7 +1002,7 @@
         private Label label8;
         private GroupBox grpMachineStatus;
         private Label label42;
-        private TextBox txtIgnoneBrakesTime;
+        private TextBox txtIgnoneBreaksTime;
         private Label label45;
         private CheckBox chkMachineStatus_ReadSQLAfterChanges;
         private CheckBox chkMachineStatus_Add2SQL;
@@ -987,5 +1048,10 @@
         private TextBox txtDeltaTimeProgStatus;
         private TextBox txtUpdatedOnProgStatus;
         private TextBox txtSameSinceProgStatus;
+        private Label label21;
+        private TextBox txtQuery;
+        private Button btnSendQuery;
+        private Button btnInsertToMachineStatusSQL;
+        private Label lblProgStatus;
     }
 }

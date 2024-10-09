@@ -9,26 +9,32 @@ using System.Timers; // For timer functionality
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using static Org.BouncyCastle.Math.Primes;
+using MyTimeNamespace; //my class for time functions
 
 namespace OPC_UA_Client
 {
     public partial class Form1 : Form
     {
 
-        private DataTable dataTable;  // To store data
+        // Create library instances
         OpcUaClient myClient = new OpcUaClient();
+        MyTime myTime = new MyTime();
+        MySQL mySQL = new MySQL();
+        MyGUI myGUI = new MyGUI();
+
+
+        private DataTable dataTable;  // To store data
+
         private string SQL_Queries_filePath;
         private string xmlFilePath;
 
         private System.Timers.Timer opcTimerMStatus;  // Timer for periodic OPC UA reading with Explicit reference to System.Timers.Timer 
         private int cycleTime = 3000;  // Stores the cycle time
 
-
-
         private MyXmlReader xmlReader;
         string connectionString; // now build from XML
         private string machineNo;
-        private string commentReason = "Bitte begründen!";
+
 
         public Form1()
         {
@@ -57,7 +63,7 @@ namespace OPC_UA_Client
         {
             btnDisconnect.Enabled = false;
             grpRW.Enabled = false;
-            grpMachineStatus.Enabled = false;   
+            grpMachineStatus.Enabled = false;
 
             timer1.Start(); // UI clock timer for system time
 
@@ -181,14 +187,14 @@ namespace OPC_UA_Client
                 // Add a subscription with a unique key for each TextBox combination
                 string subscriptionKey = Guid.NewGuid().ToString(); // Unique key per subscription
                                                                     // Add the subscription asynchronously using awaitable methods
-                
+
 
 
                 await Task.Run(() =>
                     myClient.AddSubscription(subscriptionKey, nodeId,
                     (key, monitoredItem, ev) => SubCallback(key, monitoredItem, ev, txtOutput)));
 
-                
+
 
             }
             catch (Exception ex)
@@ -200,7 +206,7 @@ namespace OPC_UA_Client
 
 
 
-       
+
 
         private void OnSubscriptionCompleted()
         {
@@ -232,7 +238,8 @@ namespace OPC_UA_Client
                     // Update txtSameSince with the current system time
                     txtSameSinceProgStatus.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 }
-                else {
+                else
+                {
                     // If the signal has not changed, update txtUpdatedOn with the current system time
                     txtUpdatedOnProgStatus.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 }
@@ -249,24 +256,13 @@ namespace OPC_UA_Client
             txtUpdatedOnProgStatus.Text = timeNow;
 
             // CalculateDelta
-            if (txtSameSinceProgStatus.Text != "") txtDeltaTimeProgStatus.Text = CalculateTimeDifference(txtSameSinceProgStatus.Text, timeNow);
-            if (txtSameSincePoti.Text != "") txtDeltaTimePoti.Text = CalculateTimeDifference(txtSameSincePoti.Text, timeNow);
+            if (txtSameSinceProgStatus.Text != "") txtDeltaTimeProgStatus.Text = myTime.CalculateTimeDifference(txtSameSinceProgStatus.Text, timeNow);
+            if (txtSameSincePoti.Text != "") txtDeltaTimePoti.Text = myTime.CalculateTimeDifference(txtSameSincePoti.Text, timeNow);
         }
 
 
 
-        public static string CalculateTimeDifference(string startTime, string endTime)
-        {
-            // Parse the time strings into DateTime objects
-            DateTime start = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss", null);
-            DateTime end = DateTime.ParseExact(endTime, "yyyy-MM-dd HH:mm:ss", null);
 
-            // Calculate the time difference as a TimeSpan
-            TimeSpan difference = end - start;
-
-            // Format the time difference as a string in HH:MM:SS format
-            return difference.ToString(@"hh\:mm\:ss");
-        }
 
         #region SQL_Manual_Entries
         private void btnReadAllSQLEntries_Click(object sender, EventArgs e)
@@ -279,7 +275,7 @@ namespace OPC_UA_Client
             //string query = "SELECT * FROM " + selectedDatabankFilter + " WHERE Machine = '" + machineNo + "'";
 
             //ExecuteCustomQuery(query, dataGridView1);
-            ExecuteCustomQuery(query, dataGridView1);
+            mySQL.ExecuteCustomQuery(connectionString, query, dataGridView1);
         }
 
         private string getDatabankGeneralSelection()
@@ -296,99 +292,7 @@ namespace OPC_UA_Client
             return selectedDatabankFilter;
         }
 
-        // A general method to execute SQL queries and bind the results to a DataGridView
-        private void ExecuteCustomQuery(string query, DataGridView dataGridView)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
 
-                    // Use SqlCommand to execute the query
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        // Execute the query and fetch the result using SqlDataAdapter
-                        SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                        DataTable dataTable = new DataTable();
-                        dataAdapter.Fill(dataTable);
-
-                        // Bind the result to the passed DataGridView
-                        dataGridView.DataSource = dataTable;
-
-                        //////////////////////////////////////////////////////////////
-                        // Special formatting - Start
-                        // COLUMNS
-                        foreach (DataGridViewColumn column in dataGridView.Columns)
-                        {
-                            // Format DateTime columns to show seconds and adjust width
-                            if (column.ValueType == typeof(DateTime))
-                            {
-                                // Set the format to display DateTime with seconds
-                                column.DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss";
-
-                                // Set column width to fit the entire date/time string
-                                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells; // Auto-size based on content
-                            }
-                        }
-                        // ROWS
-                        foreach (DataGridViewRow row in dataGridView.Rows)
-                        {
-
-                            if (!row.IsNewRow) // Check if the row is not a new row (to avoid unnecessary operations on the new row template)
-                            {
-                                // Adjust color for comments - Turn commentReason red 
-                                //if (row.Cells["Comment"].Value?.ToString() == commentReason)
-                                //{
-                                //    row.Cells["Comment"].Style.BackColor = System.Drawing.Color.Red;
-                                //}
-                                // Check if the "texthere" column exists and has a value
-
-                                // Adjust color for ProgStatus
-                                if (row.Cells["ProgStatus"].Value?.ToString() == "3")
-                                {
-                                    row.Cells["ProgStatus"].Style.BackColor = System.Drawing.Color.Green;
-                                }
-                                else row.Cells["ProgStatus"].Style.BackColor = System.Drawing.Color.Red;
-                            }
-                        }
-                        // Check if the DataGridView has a column named "Comment" <-- Code above was sometimes giving errors!
-                        if (dataGridView.Columns.Contains("Comment"))
-                        {
-                            // Get the index of the "texthere" column
-                            int columnIndex = dataGridView.Columns["Comment"].Index;
-
-                            // Iterate over the rows in the DataGridView
-                            foreach (DataGridViewRow row in dataGridView.Rows)
-                            {
-                                // Ensure the row is not the new row template
-                                if (!row.IsNewRow)
-                                {
-                                    // Check if the value in the "Comment" column is commentReason
-                                    if (row.Cells[columnIndex].Value?.ToString() == commentReason)
-                                    {
-                                        // Set the background color to red
-                                        row.Cells[columnIndex].Style.BackColor = System.Drawing.Color.Red;
-                                    }
-                                }
-                            }
-                        }
-
-
-                        // Special formatting - Ende
-                        //////////////////////////////////////////////////////////////
-                    }
-                }
-                catch (SqlException ex)
-                {
-                    MessageBox.Show("SQL Error: " + ex.Message, "SQL Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
 
         private void btnSaveSQLChanges_Click(object sender, EventArgs e)
         {
@@ -531,37 +435,7 @@ namespace OPC_UA_Client
                 // int selectedId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["UserID"].Value); // Old SQL
                 int selectedId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["EventID"].Value);
 
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    try
-                    {
-                        conn.Open();
-
-                        string query = "DELETE FROM " + selectedDatabankFilter + " WHERE EventID = @EventID";
-                        SqlCommand cmd = new SqlCommand(query, conn);
-
-                        // Add the Id parameter
-                        cmd.Parameters.AddWithValue("@EventID", selectedId);
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            MessageBox.Show("EventID deleted successfully.");
-                        }
-                        else
-                        {
-                            MessageBox.Show("No event found with the provided EventID.");
-                        }
-
-                        // Optionally refresh the DataGridView after deletion
-                        btnReadAllSQLEntries_Click(sender, e);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex.Message);
-                    }
-                }
+                mySQL.DeleteEntry(connectionString, selectedId, selectedDatabankFilter, dataGridView1);
             }
             else
             {
@@ -599,7 +473,7 @@ namespace OPC_UA_Client
 
                 throw;
             }
-            
+
         }
 
         private void updateChangeSinceTextBox()
@@ -657,8 +531,38 @@ namespace OPC_UA_Client
             }
         }
 
+        private void btnSendQuery_Click(object sender, EventArgs e)
+        {
+            //For example 
+            //SELECT * FROM MachineStatus WHERE InsertTime >= '2024-09-20T00:00:00'
+            //SELECT * FROM MachineStatus WHERE Machine = '4803'                   // Machine is 4803
+            //SELECT * FROM MachineStatus WHERE Machine LIKE '%4%0%'              // FirstName is 4*0*
+            //SELECT DISTINCT Machine FROM MachineStatus ORDER BY Machine       // Unique First Names
 
+            string query = txtQuery.Text; // Get the query from the txtQuery TextBox
+
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                MessageBox.Show("Please enter a valid SQL query.", "Invalid Query", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Execute the custom query and display results in dataGridView1
+            mySQL.ExecuteCustomQuery(connectionString, query, dataGridView1);
+        }
+
+        private void btnInsertToMachineStatusSQL_Click(object sender, EventArgs e)
+        {
+            mySQL.insertMachineStatus(connectionString, lblMachineNo.Text, true, int.Parse(txtIgnoneBreaksTime.Text),
+                txtValueProgStatus.Text, txtUpdatedOnProgStatus.Text, txtSameSinceProgStatus.Text);
+        }
+
+        private void txtValueProgStatus_TextChanged(object sender, EventArgs e)
+        {
+            string progStatus = txtValueProgStatus.Text;
+            // Change appearance according to value
+            (txtValueProgStatus.BackColor, lblProgStatus.ForeColor, lblProgStatus.Text) = myGUI.AppearanceFromValue(progStatus, txtValueProgStatus, lblProgStatus);
+            
+        }
     }
-
-
 }
