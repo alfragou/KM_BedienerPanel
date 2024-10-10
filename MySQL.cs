@@ -119,8 +119,8 @@ class MySQL
     private void UpdateRow(DataRow row, SqlConnection conn, SqlTransaction transaction, string selectedTable)
     {
         string selectedDatabankFilter = selectedTable;
-        string productionDataMsg = "Machine, ProgStatus, ProgPfadName, LineContent, ToolIdent, Overrid, MFunktion, OpMode, VorschubSpdl, Comment, InsertTime) VALUES(@Machine, @ProgStatus, @ProgPfadName, @LineContent, @ToolIdent, @Overrid, @MFunktion, @OpMode, @VorschubSpdl, @Comment,  @InsertTime";
-        string machineStatusMsg = "Machine, ProgStatus, LastUpdate, InsertTime, Comment) VALUES(@Machine, @ProgStatus, @LastUpdate, @InsertTime, @Comment";
+        string productionDataMsg = "Machine = @Machine, ProgStatus = @ProgStatus, ProgPfadName = @ProgPfadName, LineContent = @LineContent, ToolIdent = @ToolIdent, Overrid = @Overrid, MFunktion = @MFunktion, OpMode = @OpMode, VorschubSpdl = @VorschubSpdl, Comment = @Comment, InsertTime = @InsertTime WHERE EventID = @EventID"; // Update for ProductionData
+        string machineStatusMsg = "Machine = @Machine, ProgStatus = @ProgStatus, LastUpdate = @LastUpdate, InsertTime = @InsertTime, Comment = @Comment WHERE EventID = @EventID"; // Update for MachineStatus
         string sqlMsg = "";
         if (selectedDatabankFilter == "ProductionData")
         {
