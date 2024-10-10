@@ -8,7 +8,7 @@ namespace MyTimeNamespace
 { 
     public class MyTime
     {
-        public string CalculateTimeDifference(string startTime, string endTime)
+        public (string,TimeSpan) CalculateTimeDifference(string startTime, string endTime)
         {
             // Parse the time strings into DateTime objects
             DateTime start = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss", null);
@@ -18,7 +18,8 @@ namespace MyTimeNamespace
             TimeSpan difference = end - start;
 
             // Format the time difference as a string in HH:MM:SS format
-            return difference.ToString(@"hh\:mm\:ss");
+            string differenceString = difference.ToString(@"hh\:mm\:ss");
+            return (differenceString, difference);
         }
 
         public static int CalculateTimeDifferenceInSeconds(string startTime, string endTime)

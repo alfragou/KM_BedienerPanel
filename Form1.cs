@@ -41,6 +41,9 @@ namespace OPC_UA_Client
         private string oldProgStatus = string.Empty; // A field to store the old program status
         private string LogMsg = string.Empty; // To store Log Messages
 
+        private bool isMessageShown = false; // Flag for User Message
+
+
         public Form1()
         {
 
@@ -284,9 +287,41 @@ namespace OPC_UA_Client
             txtSystemTime.Text = timeNow;
             txtUpdatedOnProgStatus.Text = timeNow;
 
-            // CalculateDelta
-            if (txtSameSinceProgStatus.Text != "") txtDeltaTimeProgStatus.Text = myTime.CalculateTimeDifference(txtSameSinceProgStatus.Text, timeNow);
-            if (txtSameSincePoti.Text != "") txtDeltaTimePoti.Text = myTime.CalculateTimeDifference(txtSameSincePoti.Text, timeNow);
+            // Delta Time - Calculate and react!!
+            if (txtSameSinceProgStatus.Text != "")
+            {
+                (txtDeltaTimeProgStatus.Text, TimeSpan deltaProgStatus) = myTime.CalculateTimeDifference(txtSameSinceProgStatus.Text, timeNow);
+                long cycleTime;
+                // If Delta Time, longer as deltaProgStatus is milliseconds then react
+                if (txtValueProgStatus.Text != "3" && long.TryParse(txtCycleTimeMStatus.Text, out cycleTime) && deltaProgStatus.TotalMilliseconds >= cycleTime)
+                {
+                    // Check if the message has already been shown
+                    if (!isMessageShown)
+                    {
+                        isMessageShown = true; // Set flag to true to prevent repeated pop-ups
+                        TriggerNonBlockingMessage(); // Show the message
+                    }
+                }
+
+
+            }
+            if (txtSameSincePoti.Text != "")
+            {
+                (txtDeltaTimePoti.Text, TimeSpan deltaPoti) = myTime.CalculateTimeDifference(txtSameSincePoti.Text, timeNow);
+            }
+        }
+
+        // Somewhere in your main application code
+        public void TriggerNonBlockingMessage()
+        {
+            NonBlockingMessage nonBlockingMessage = new NonBlockingMessage();
+            nonBlockingMessage.Show(); // Show the pop-up message
+
+            // Subscribe to the PopUpClosed event to reset the flag when the form is closed
+            nonBlockingMessage.PopUpClosed += (sender, e) =>
+            {
+                isMessageShown = false; // Reset the flag after the user closes the pop-up
+            };
         }
 
 
@@ -488,6 +523,10 @@ namespace OPC_UA_Client
         {
             TextBox textBox = (TextBox)sender;
             string progStatus = txtValueProgStatus.Text;
+            // Change appearance according to value
+            (txtValueProgStatus.BackColor, lblProgStatus.ForeColor, lblProgStatus.Text) = myGUI.AppearanceFromValue(progStatus, txtValueProgStatus, lblProgStatus);
+
+
             // Attention - For a reason, after every change, TextChanged runs twice
             if (oldProgStatus == string.Empty) // to avoid the first run
             {
@@ -500,11 +539,8 @@ namespace OPC_UA_Client
                 // Optionally, show the old text and new text
                 LogMsg = $"Old Text: {oldProgStatus} - New Text: {progStatus}";
                 //MessageBox.Show(LogMsg);
+                PostLogMessage(MyLog.MessageType.Info, "------------------------------");
                 PostLogMessage(MyLog.MessageType.Info, LogMsg);
-
-
-                // Change appearance according to value
-                (txtValueProgStatus.BackColor, lblProgStatus.ForeColor, lblProgStatus.Text) = myGUI.AppearanceFromValue(progStatus, txtValueProgStatus, lblProgStatus);
 
                 if (chkMachineStatus_Add2SQL.Checked) 
                 {
