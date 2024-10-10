@@ -38,11 +38,14 @@ namespace OPC_UA_Client
         string connectionString; // now build from XML
         private string machineNo;
 
+        private string oldProgStatus = string.Empty; // A field to store the old program status
+        private string LogMsg = string.Empty; // To store Log Messages
 
         public Form1()
         {
 
             InitializeComponent();
+            txtValueProgStatus.TextChanged += txtValueProgStatus_TextChanged; // Subscribing to the Prog Status TextChanged event
             this.Load += Form1_Load; // Hook up the Load event
             myClient.UserIdentity = new UserIdentity(new AnonymousIdentityToken());
 
@@ -298,6 +301,7 @@ namespace OPC_UA_Client
             if (string.IsNullOrEmpty(selectedTable))
             {
                 MessageBox.Show("Please select a table.");
+                PostLogMessage(MyLog.MessageType.Error, "Please select a table.");
                 return;
             }
 
@@ -477,16 +481,88 @@ namespace OPC_UA_Client
 
         private void btnInsertToMachineStatusSQL_Click(object sender, EventArgs e)
         {
-            mySQL.insertMachineStatus(lblMachineNo.Text, true, int.Parse(txtIgnoneBreaksTime.Text),
-                txtValueProgStatus.Text, txtUpdatedOnProgStatus.Text, txtSameSinceProgStatus.Text);
+            insertSQL();
         }
 
         private void txtValueProgStatus_TextChanged(object sender, EventArgs e)
         {
+            TextBox textBox = (TextBox)sender;
             string progStatus = txtValueProgStatus.Text;
-            // Change appearance according to value
-            (txtValueProgStatus.BackColor, lblProgStatus.ForeColor, lblProgStatus.Text) = myGUI.AppearanceFromValue(progStatus, txtValueProgStatus, lblProgStatus);
+            // Attention - For a reason, after every change, TextChanged runs twice
+            if (oldProgStatus == string.Empty) // to avoid the first run
+            {
+                // Update the old text after processing
+                oldProgStatus = progStatus;
+            }
+            // Detect ProgStatus Value Change
+            else if  (oldProgStatus != progStatus) { 
+                // Process the new text here
+                // Optionally, show the old text and new text
+                LogMsg = $"Old Text: {oldProgStatus} - New Text: {progStatus}";
+                //MessageBox.Show(LogMsg);
+                PostLogMessage(MyLog.MessageType.Info, LogMsg);
+
+
+                // Change appearance according to value
+                (txtValueProgStatus.BackColor, lblProgStatus.ForeColor, lblProgStatus.Text) = myGUI.AppearanceFromValue(progStatus, txtValueProgStatus, lblProgStatus);
+
+                if (chkMachineStatus_Add2SQL.Checked) 
+                {
+                    string machineNr = lblMachineNo.Text;
+                    // Returns eventID and ProgStatus of most recent entry for this machine
+                    (int eventID, string progStatusSQL) = mySQL.FetchMostRecentEntry(machineNr, dataGridView1); //deconstruct results
+                    PostLogMessage(MyLog.MessageType.SQLInfo, $"Most recent EventID: {eventID} - ProgStatus: {progStatus}");
+
+                    //insertSQL(); 
+                    //mySQL.insertMachineStatus(lblMachineNo.Text, false, int.Parse(txtIgnoneBreaksTime.Text),
+                    //txtValueProgStatus.Text, txtUpdatedOnProgStatus.Text, txtSameSinceProgStatus.Text);
+
+                    // STEP 4 - Compare sql ProgStatus with current ProgStatus
+                    // if different update time at last sql and add new entry 
+                    // UPDATE MachineStatus Entry
+                    // UPDATE MachineStatus SET LastUpdate = '2024-09-30T16:21:19' WHERE eventID = 15
+                    // Update Time
+                    string timeLastEntry = txtSameSinceProgStatus.Text;
+                    string updateTimeLastEntryQuery = "UPDATE MachineStatus SET LastUpdate = '" + MyTime.convertTimeForSQL(timeLastEntry) + "' WHERE eventID =" + eventID;
+                    mySQL.ExecuteCustomQuery(updateTimeLastEntryQuery, dataGridView1);
+                    PostLogMessage(MyLog.MessageType.SQLChange, $"EventID: {eventID} - LastUpdate: {timeLastEntry}");
+
+
+                    if (progStatusSQL != progStatus)
+                    {
+                        string timeNewEntry = txtUpdatedOnProgStatus.Text;
+                        // Add new SQL entry - insertMachineStatus converts TextTime to TextTimeForSQL
+                       mySQL.insertMachineStatus(machineNr, true, int.Parse(txtIgnoneBreaksTime.Text), progStatus, timeNewEntry, timeLastEntry);
+                        PostLogMessage(MyLog.MessageType.SQLEntry, $"Machine:{machineNr} - ProgStatus:{progStatus} - LastUpdate: {timeNewEntry} - InsertTime:{timeLastEntry}");
+                    }
+                    txtSameSinceProgStatus.Text = txtUpdatedOnProgStatus.Text; // UpdateTime Now
+
+                }
+
+                // Update view after change
+                if (chkMachineStatus_ReadSQLAfterChanges.Checked)
+                {
+                    // Read and display SQL data in DataGridView1
+                    string query = "SELECT * FROM " + "MachineStatus";
+                    mySQL.ExecuteCustomQuery(query, dataGridView1);
+                }
+                // Update the old text after processing
+                oldProgStatus = progStatus;
+            }
 
         }
+
+        // Create sql entry from textboxes
+        private void insertSQL() 
+        {
+            mySQL.insertMachineStatus(lblMachineNo.Text, false, int.Parse(txtIgnoneBreaksTime.Text),
+                 txtValueProgStatus.Text, txtUpdatedOnProgStatus.Text, txtSameSinceProgStatus.Text);
+        }
+
+        public void PostLogMessage(MyLog.MessageType type, string msg)
+        {
+            MyLog.PostLogMessage(rtxLog,type, msg);
+        }
+
     }
 }

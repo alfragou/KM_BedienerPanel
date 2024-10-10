@@ -47,7 +47,6 @@
             label2 = new Label();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
-            dataGridView1 = new DataGridView();
             label41 = new Label();
             cmbSelectedDatabankGeneral = new ComboBox();
             btnSaveSQLChanges = new Button();
@@ -55,6 +54,7 @@
             btnDeleteSQLEntry = new Button();
             btnReadAllSQLEntries = new Button();
             label46 = new Label();
+            dataGridView1 = new DataGridView();
             timer1 = new System.Windows.Forms.Timer(components);
             label5 = new Label();
             lblComputerName = new Label();
@@ -112,12 +112,20 @@
             txtQuery = new TextBox();
             btnSendQuery = new Button();
             btnInsertToMachineStatusSQL = new Button();
+            tabControl1 = new TabControl();
+            tabPage1 = new TabPage();
+            tabPage2 = new TabPage();
+            btnStartStopAutomatik = new Button();
+            rtxLog = new RichTextBox();
             grpRW.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             grpMachineStatus.SuspendLayout();
             grpTimeParameters.SuspendLayout();
+            tabControl1.SuspendLayout();
+            tabPage1.SuspendLayout();
+            tabPage2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -170,7 +178,7 @@
             grpRW.Controls.Add(label3);
             grpRW.Controls.Add(txtItem);
             grpRW.Controls.Add(label2);
-            grpRW.Location = new Point(538, 74);
+            grpRW.Location = new Point(523, 54);
             grpRW.Name = "grpRW";
             grpRW.Size = new Size(512, 103);
             grpRW.TabIndex = 4;
@@ -277,16 +285,15 @@
             groupBox1.Controls.Add(txtServer);
             groupBox1.Controls.Add(btnConnect);
             groupBox1.Controls.Add(btnDisconnect);
-            groupBox1.Location = new Point(12, 12);
+            groupBox1.Location = new Point(0, 0);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(708, 56);
+            groupBox1.Size = new Size(708, 45);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             groupBox1.Text = "Verbindung";
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(dataGridView1);
             groupBox2.Controls.Add(label41);
             groupBox2.Controls.Add(cmbSelectedDatabankGeneral);
             groupBox2.Controls.Add(btnSaveSQLChanges);
@@ -294,21 +301,12 @@
             groupBox2.Controls.Add(btnDeleteSQLEntry);
             groupBox2.Controls.Add(btnReadAllSQLEntries);
             groupBox2.Controls.Add(label46);
-            groupBox2.Location = new Point(12, 340);
+            groupBox2.Location = new Point(12, 380);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(991, 276);
+            groupBox2.Size = new Size(1039, 276);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
             groupBox2.Text = "groupBox2";
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(8, 50);
-            dataGridView1.Margin = new Padding(4, 3, 4, 3);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(983, 222);
-            dataGridView1.TabIndex = 54;
             // 
             // label41
             // 
@@ -381,6 +379,15 @@
             label46.TabIndex = 45;
             label46.Text = "SystemTime";
             // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(22, 428);
+            dataGridView1.Margin = new Padding(4, 3, 4, 3);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(1021, 222);
+            dataGridView1.TabIndex = 54;
+            // 
             // timer1
             // 
             timer1.Tick += timer1_Tick;
@@ -388,7 +395,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(817, 15);
+            label5.Location = new Point(12, 5);
             label5.Name = "label5";
             label5.Size = new Size(64, 15);
             label5.TabIndex = 9;
@@ -397,7 +404,7 @@
             // lblComputerName
             // 
             lblComputerName.AutoSize = true;
-            lblComputerName.Location = new Point(887, 15);
+            lblComputerName.Location = new Point(82, 5);
             lblComputerName.Name = "lblComputerName";
             lblComputerName.Size = new Size(109, 15);
             lblComputerName.TabIndex = 11;
@@ -406,7 +413,7 @@
             // lblMachineNo
             // 
             lblMachineNo.AutoSize = true;
-            lblMachineNo.Location = new Point(887, 36);
+            lblMachineNo.Location = new Point(268, 5);
             lblMachineNo.Name = "lblMachineNo";
             lblMachineNo.Size = new Size(101, 15);
             lblMachineNo.TabIndex = 13;
@@ -415,7 +422,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(817, 36);
+            label8.Location = new Point(198, 5);
             label8.Name = "label8";
             label8.Size = new Size(61, 15);
             label8.TabIndex = 12;
@@ -446,7 +453,7 @@
             grpMachineStatus.Controls.Add(label31);
             grpMachineStatus.Controls.Add(txtValueProgStatus);
             grpMachineStatus.Controls.Add(txtValuePoti);
-            grpMachineStatus.Location = new Point(12, 74);
+            grpMachineStatus.Location = new Point(3, 45);
             grpMachineStatus.Name = "grpMachineStatus";
             grpMachineStatus.Size = new Size(520, 233);
             grpMachineStatus.TabIndex = 14;
@@ -737,7 +744,7 @@
             // 
             label34.AutoSize = true;
             label34.BorderStyle = BorderStyle.FixedSingle;
-            label34.Location = new Point(538, 182);
+            label34.Location = new Point(524, 160);
             label34.Margin = new Padding(4, 0, 4, 0);
             label34.Name = "label34";
             label34.Size = new Size(96, 92);
@@ -911,7 +918,7 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new Point(19, 316);
+            label21.Location = new Point(10, 289);
             label21.Margin = new Padding(4, 0, 4, 0);
             label21.Name = "label21";
             label21.Size = new Size(39, 15);
@@ -920,14 +927,14 @@
             // 
             // txtQuery
             // 
-            txtQuery.Location = new Point(68, 313);
+            txtQuery.Location = new Point(59, 286);
             txtQuery.Name = "txtQuery";
             txtQuery.Size = new Size(813, 23);
             txtQuery.TabIndex = 71;
             // 
             // btnSendQuery
             // 
-            btnSendQuery.Location = new Point(888, 310);
+            btnSendQuery.Location = new Point(875, 286);
             btnSendQuery.Margin = new Padding(4, 3, 4, 3);
             btnSendQuery.Name = "btnSendQuery";
             btnSendQuery.Size = new Size(105, 27);
@@ -938,7 +945,7 @@
             // 
             // btnInsertToMachineStatusSQL
             // 
-            btnInsertToMachineStatusSQL.Location = new Point(834, 279);
+            btnInsertToMachineStatusSQL.Location = new Point(819, 253);
             btnInsertToMachineStatusSQL.Margin = new Padding(4, 3, 4, 3);
             btnInsertToMachineStatusSQL.Name = "btnInsertToMachineStatusSQL";
             btnInsertToMachineStatusSQL.Size = new Size(159, 27);
@@ -947,24 +954,75 @@
             btnInsertToMachineStatusSQL.UseVisualStyleBackColor = true;
             btnInsertToMachineStatusSQL.Click += btnInsertToMachineStatusSQL_Click;
             // 
+            // tabControl1
+            // 
+            tabControl1.Controls.Add(tabPage1);
+            tabControl1.Controls.Add(tabPage2);
+            tabControl1.Location = new Point(12, 23);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(1042, 351);
+            tabControl1.TabIndex = 73;
+            // 
+            // tabPage1
+            // 
+            tabPage1.Controls.Add(groupBox1);
+            tabPage1.Controls.Add(btnSendQuery);
+            tabPage1.Controls.Add(btnInsertToMachineStatusSQL);
+            tabPage1.Controls.Add(txtQuery);
+            tabPage1.Controls.Add(label21);
+            tabPage1.Controls.Add(grpMachineStatus);
+            tabPage1.Controls.Add(grpRW);
+            tabPage1.Controls.Add(label34);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(3);
+            tabPage1.Size = new Size(1034, 323);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Debug";
+            tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            tabPage2.Controls.Add(btnStartStopAutomatik);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(3);
+            tabPage2.Size = new Size(1034, 323);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "MaschinenStatus";
+            tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // btnStartStopAutomatik
+            // 
+            btnStartStopAutomatik.Location = new Point(6, 6);
+            btnStartStopAutomatik.Name = "btnStartStopAutomatik";
+            btnStartStopAutomatik.Size = new Size(75, 40);
+            btnStartStopAutomatik.TabIndex = 74;
+            btnStartStopAutomatik.Text = "Start / Stop Automatik";
+            btnStartStopAutomatik.UseVisualStyleBackColor = true;
+            // 
+            // rtxLog
+            // 
+            rtxLog.Location = new Point(14, 665);
+            rtxLog.Name = "rtxLog";
+            rtxLog.Size = new Size(1040, 96);
+            rtxLog.TabIndex = 74;
+            rtxLog.Text = "";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1062, 628);
-            Controls.Add(btnInsertToMachineStatusSQL);
-            Controls.Add(btnSendQuery);
-            Controls.Add(txtQuery);
-            Controls.Add(label21);
-            Controls.Add(label34);
-            Controls.Add(grpMachineStatus);
+            ClientSize = new Size(1062, 834);
+            Controls.Add(rtxLog);
+            Controls.Add(dataGridView1);
+            Controls.Add(tabControl1);
             Controls.Add(lblMachineNo);
             Controls.Add(label8);
             Controls.Add(lblComputerName);
             Controls.Add(label5);
             Controls.Add(groupBox2);
-            Controls.Add(groupBox1);
-            Controls.Add(grpRW);
             Name = "Form1";
             Text = "Bediener Panel";
             grpRW.ResumeLayout(false);
@@ -978,6 +1036,10 @@
             grpMachineStatus.PerformLayout();
             grpTimeParameters.ResumeLayout(false);
             grpTimeParameters.PerformLayout();
+            tabControl1.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
+            tabPage2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1069,5 +1131,10 @@
         private Button btnInsertToMachineStatusSQL;
         private Label lblProgStatus;
         private GroupBox grpTimeParameters;
+        private TabControl tabControl1;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        private Button btnStartStopAutomatik;
+        private RichTextBox rtxLog;
     }
 }

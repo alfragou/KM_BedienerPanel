@@ -119,8 +119,8 @@ class MySQL
     private void UpdateRow(DataRow row, SqlConnection conn, SqlTransaction transaction, string selectedTable)
     {
         string selectedDatabankFilter = selectedTable;
-        string productionDataMsg = "Machine = @Machine, ProgStatus = @ProgStatus WHERE EventID = @EventID"; // Update for ProductionData
-        string machineStatusMsg = "Machine = @Machine, ProgStatus = @ProgStatus WHERE EventID = @EventID"; // Update for machineStatus
+        string productionDataMsg = "Machine, ProgStatus, ProgPfadName, LineContent, ToolIdent, Overrid, MFunktion, OpMode, VorschubSpdl, Comment, InsertTime) VALUES(@Machine, @ProgStatus, @ProgPfadName, @LineContent, @ToolIdent, @Overrid, @MFunktion, @OpMode, @VorschubSpdl, @Comment,  @InsertTime";
+        string machineStatusMsg = "Machine, ProgStatus, LastUpdate, InsertTime, Comment) VALUES(@Machine, @ProgStatus, @LastUpdate, @InsertTime, @Comment";
         string sqlMsg = "";
         if (selectedDatabankFilter == "ProductionData")
         {
@@ -301,7 +301,71 @@ class MySQL
             }
         }
     }
-    
+
+    // Example method to fetch the most recent entry's eventID and ProgStatus
+    public (int eventID, string progStatus) FetchMostRecentEntry(string machineNr,DataGridView dataGridView)
+    {
+        // Variables to store the result
+        int eventID = 0;
+        string progStatus = string.Empty;
+
+        // SQL Query to get the most recent eventID and ProgStatus
+        string query = "SELECT eventID, ProgStatus " +
+                       "FROM MachineStatus " +
+                       "WHERE Machine = '" + machineNr + "'" +
+                       "ORDER BY LastUpdate DESC " +
+                       "OFFSET 0 ROWS FETCH FIRST 1 ROWS ONLY;";
+
+        using (SqlConnection conn = new SqlConnection(connectionString))
+        {
+            try
+            {
+                conn.Open();
+
+                // Use SqlCommand to execute the query
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    // Execute the query and use SqlDataReader to get the result
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Read the values and store them in the variables
+                            eventID = reader.GetInt32(0);        // eventID (assuming it's an int)
+                            progStatus = reader.GetString(1);    // ProgStatus (assuming it's a string)
+
+                            // Optionally, show in the console or messagebox
+                            //Console.WriteLine($"EventID: {eventID}, ProgStatus: {progStatus}");
+                            //MessageBox.Show($"Most recent EventID: {eventID}\nProgStatus: {progStatus}");
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("SQL Error: " + ex.Message, "SQL Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Optionally bind the result to a DataGridView (if you still need to display it)
+        string displayQuery = "SELECT eventID, ProgStatus " +
+                       "FROM MachineStatus " +
+                       "WHERE Machine = '" + machineNr + "'" +
+                       "ORDER BY LastUpdate DESC " +
+                       "OFFSET 0 ROWS FETCH FIRST 1 ROWS ONLY;";
+        // Display the result in DataGridView2
+        ExecuteCustomQuery(displayQuery, dataGridView);
+
+        return (eventID, progStatus);
+    }
+
+
+
+
     // Apply special formatting - private since it is an class internal function
     private void dataGridViewSpecialFormat(DataGridView dataGridView)
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OPC_UA_Client
 {
-    internal class MyGUI
+    public class MyGUI
     {
         public (Color, Color, String) AppearanceFromValue(string progStatus, TextBox box, Label label)
         {
@@ -45,5 +45,5 @@ namespace OPC_UA_Client
 
             return (textboxColor, labelColor, statusText);  
         }
-    }
-}
+    } // End of class
+} // End of namespace
