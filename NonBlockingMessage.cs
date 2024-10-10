@@ -5,14 +5,14 @@ using OPC_UA_Client; // Assuming the namespace of PopUpForm is OPC_UA_Client
 public class NonBlockingMessage
 {
     private System.Windows.Forms.Timer updateTimer;
-    private Form2 popUpForm;
+    private PopUpForm popUpForm;
 
     // Define an event that will be triggered when the pop-up form is closed
     public event EventHandler PopUpClosed;
 
     public NonBlockingMessage()
     {
-        popUpForm = new Form2();
+        popUpForm = new PopUpForm();
         updateTimer = new System.Windows.Forms.Timer();
         updateTimer.Interval = 1000; // 1 second interval for updates
         updateTimer.Tick += UpdateDeltaTime;

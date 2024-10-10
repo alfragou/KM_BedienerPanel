@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace OPC_UA_Client
 {
-    public partial class Form2 : Form
+    public partial class PopUpForm : Form
     {
-        public Form2()
+        public PopUpForm()
         {
             InitializeComponent();
         }
@@ -48,4 +48,3 @@ namespace OPC_UA_Client
         }
     } // End of class
 } // End of namespace
-

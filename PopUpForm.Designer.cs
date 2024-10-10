@@ -1,6 +1,6 @@
 ﻿namespace OPC_UA_Client
 {
-    partial class Form2
+    partial class PopUpForm
     {
         /// <summary>
         /// Required designer variable.
@@ -106,7 +106,7 @@
             btnWaitForCrane.UseVisualStyleBackColor = true;
             btnWaitForCrane.Click += btnWaitForCrane_Click;
             // 
-            // Form2
+            // PopUpForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -114,7 +114,7 @@
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(lblDeltaTime);
-            Name = "Form2";
+            Name = "PopUpForm";
             Text = "Störungsmeldung";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
